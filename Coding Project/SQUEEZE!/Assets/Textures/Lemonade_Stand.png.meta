@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Lemonade_Stand_0: -1184395565979830445
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
