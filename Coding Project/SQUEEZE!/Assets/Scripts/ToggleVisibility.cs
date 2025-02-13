@@ -16,6 +16,7 @@ public class ToggleVisibility : MonoBehaviour
     {
         if (targetObject != null)
         {
+            targetObject.transform.SetAsLastSibling();
             targetObject.SetActive(!targetObject.activeSelf);
         }
     }
