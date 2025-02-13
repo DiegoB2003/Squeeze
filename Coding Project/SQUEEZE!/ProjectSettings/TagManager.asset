@@ -41,5 +41,8 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Stand
+    uniqueID: 2726643213
+    locked: 0
   m_RenderingLayers:
   - Default
