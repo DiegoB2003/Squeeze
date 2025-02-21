@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ShopManager : MonoBehaviour
 {
@@ -29,8 +30,8 @@ public class ShopManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            // DontDestroyOnLoad(transform.root.gameObject);
-            // DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
@@ -40,6 +41,7 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
+        moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
         UpdateUI(); //Updates UI with information
     }
 
@@ -88,4 +90,43 @@ public class ShopManager : MonoBehaviour
             moneyText.text = "Cash: $" + totalMoney;
         }
     }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        //Only update when returning to the GameScene
+        if (scene.name == "GameScene")
+        {
+            moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+
+            if (moneyText == null)
+            {
+                Debug.LogError("MoneyText UI element not found in the scene.");
+            }
+            AssignUIButtons(); //Reconnect buttons
+            UpdateUI(); //Refresh the displayed money amount
+        }
+    }
+
+    void AssignUIButtons()
+    {
+        moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+
+        //Find and reconnect buttons
+        AssignButton("BuyLemonButton", "Lemon");
+        AssignButton("BuySugarButton", "Sugar");
+        AssignButton("BuyTeaButton", "Tea");
+        AssignButton("BuyGrapesButton", "Grape");
+    }
+
+    void AssignButton(string buttonName, string itemName)
+    {
+        Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
+
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
+            button.onClick.AddListener(() => PurchaseItem(itemName)); //Reassign listener
+        }
+    }
+
 }
