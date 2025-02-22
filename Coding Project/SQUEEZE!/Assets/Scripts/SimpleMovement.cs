@@ -9,8 +9,12 @@ public class SimpleMovement : MonoBehaviour
     public float maxDistance = 10f; // Distance before stopping
     public Button TakeOrder; // Reference to the UI Button
 
+    public GameObject orderPanel;
+
     private Rigidbody2D rb;
     private Vector2 startPosition;
+
+    private bool isOrderButtonActivated = false;
 
     void Start()
     {
@@ -24,7 +28,8 @@ public class SimpleMovement : MonoBehaviour
         if (TakeOrder != null)
         {
             TakeOrder.gameObject.SetActive(false); // Hide button at the start
-            TakeOrder.onClick.AddListener(HideButton); // Attach function to button click
+            orderPanel.SetActive(false); // Hide order panel at start
+            TakeOrder.onClick.AddListener(HideButtonShowOrder); // Attach function to button click
         }
     }
 
@@ -35,18 +40,20 @@ public class SimpleMovement : MonoBehaviour
         if (distanceTraveled >= maxDistance)
         {
             rb.linearVelocity = Vector2.zero; // Stop moving
-            if (TakeOrder != null)
+            if (TakeOrder != null && !isOrderButtonActivated)
             {
                 TakeOrder.gameObject.SetActive(true); // Show the button
+                isOrderButtonActivated = true;
             }
         }
     }
 
-    void HideButton()
+    void HideButtonShowOrder()
     {
         if (TakeOrder != null)
         {
             TakeOrder.gameObject.SetActive(false); // Hide button when clicked
+            orderPanel.SetActive(true); // Show order panel
         }
     }
 }
