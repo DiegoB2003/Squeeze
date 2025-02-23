@@ -10,9 +10,9 @@ public class ShopManager : MonoBehaviour
 
     public int totalMoney = 50; //The player starts with $50 on the game
 
-    public TextMeshProUGUI moneyText; //Text box the displays total money
+    public TextMeshProUGUI moneyText; //Text box that displays total money
 
-    //Dicationary to store item names to the amount the player has in their inventory
+    //Dictionary to store item names to the amount the player has in their inventory
     public Dictionary<string, int> inventory = new Dictionary<string, int>();
 
     //Dictionary mapping item names to their costs
@@ -23,6 +23,12 @@ public class ShopManager : MonoBehaviour
          { "Tea", 4 },
          { "Grape", 3 }
     };
+
+    // Text fields for each item to display the quantity
+    public TextMeshProUGUI lemonText;
+    public TextMeshProUGUI sugarText;
+    public TextMeshProUGUI teaText;
+    public TextMeshProUGUI grapeText;
 
     void Awake()
     {
@@ -42,7 +48,18 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
         moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+        InitializeInventory();  // Initialize inventory to start with 0
         UpdateUI(); //Updates UI with information
+        UpdateInventoryText();//updates inventory text
+    }
+
+    // Initialize the inventory with 0 items
+    void InitializeInventory()
+    {
+        inventory["Lemon"] = 0;
+        inventory["Sugar"] = 0;
+        inventory["Tea"] = 0;
+        inventory["Grape"] = 0;
     }
 
     //Function called with button click to purchase an item
@@ -75,6 +92,9 @@ public class ShopManager : MonoBehaviour
             }
 
             Debug.Log("Purchased " + itemName + " for $" + cost + ". Total " + itemName + " in inventory: " + inventory[itemName]);
+
+            // Update inventory text after purchase
+            UpdateInventoryText();
         }
         else
         {
@@ -91,6 +111,30 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    // Update the displayed quantities of items in the inventory
+    void UpdateInventoryText()
+    {
+        if (lemonText != null)
+        {
+            lemonText.text = "Lemons: " + inventory["Lemon"].ToString();
+        }
+
+        if (sugarText != null)
+        {
+            sugarText.text = "Sugar: " + inventory["Sugar"].ToString();
+        }
+
+        if (teaText != null)
+        {
+            teaText.text = "Tea: " + inventory["Tea"].ToString();
+        }
+
+        if (grapeText != null)
+        {
+            grapeText.text = "Grapes: " + inventory["Grape"].ToString();
+        }
+    }
+
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         //Only update when returning to the GameScene
@@ -104,6 +148,7 @@ public class ShopManager : MonoBehaviour
             }
             AssignUIButtons(); //Reconnect buttons
             UpdateUI(); //Refresh the displayed money amount
+            UpdateInventoryText(); // Refresh inventory display
         }
     }
 
@@ -128,5 +173,4 @@ public class ShopManager : MonoBehaviour
             button.onClick.AddListener(() => PurchaseItem(itemName)); //Reassign listener
         }
     }
-
 }
