@@ -146,15 +146,25 @@ public class ShopManager : MonoBehaviour
             {
                 Debug.LogError("MoneyText UI element not found in the scene.");
             }
-            AssignUIButtons(); //Reconnect buttons
+            AssignUI(); //Reconnect buttons
+
+            if (inventory.Count == 0) //If inventory is empty, initialize it
+            {
+                InitializeInventory();
+            }
+
             UpdateUI(); //Refresh the displayed money amount
             UpdateInventoryText(); // Refresh inventory display
         }
     }
 
-    void AssignUIButtons()
+    void AssignUI()
     {
         moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+        lemonText = GameObject.Find("lemonText")?.GetComponent<TextMeshProUGUI>();
+        sugarText = GameObject.Find("sugarText")?.GetComponent<TextMeshProUGUI>();
+        teaText = GameObject.Find("teaText")?.GetComponent<TextMeshProUGUI>();
+        grapeText = GameObject.Find("grapeText")?.GetComponent<TextMeshProUGUI>();
 
         //Find and reconnect buttons
         AssignButton("BuyLemonButton", "Lemon");
