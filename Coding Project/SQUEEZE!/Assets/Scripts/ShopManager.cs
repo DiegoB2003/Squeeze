@@ -9,8 +9,10 @@ public class ShopManager : MonoBehaviour
     public static ShopManager Instance; //Instance of shop manager for other files to access
 
     public int totalMoney = 50; //The player starts with $50 on the game
+    public int day = 1;
 
     public TextMeshProUGUI moneyText; //Text box that displays total money
+    public TextMeshProUGUI dayText;
 
     //Dictionary to store item names to the amount the player has in their inventory
     public Dictionary<string, int> inventory = new Dictionary<string, int>();
@@ -29,6 +31,7 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI sugarText;
     public TextMeshProUGUI teaText;
     public TextMeshProUGUI grapeText;
+    public TextMeshProUGUI lemonadeText;
 
     void Awake()
     {
@@ -48,6 +51,7 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
         moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+        dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
         InitializeInventory();  // Initialize inventory to start with 0
         UpdateUI(); //Updates UI with information
         UpdateInventoryText();//updates inventory text
@@ -60,6 +64,7 @@ public class ShopManager : MonoBehaviour
         inventory["Sugar"] = 0;
         inventory["Tea"] = 0;
         inventory["Grape"] = 0;
+        inventory["Lemonade"] = 0;
     }
 
     //Function called with button click to purchase an item
@@ -102,6 +107,18 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    public void craftLemonade(){
+        if (inventory["Lemon"] >= 2 && inventory["Sugar"] >= 1){
+            inventory["Lemon"] -= 2;
+            inventory["Sugar"] -= 1;
+            inventory["Lemonade"] += 1;
+            UpdateInventoryText();
+        }
+        else{
+            Debug.Log("Not enough ingredients to craft Lemonade!");
+        }
+    }
+
     //Update the UI text to show the current money.
     void UpdateUI()
     {
@@ -113,7 +130,12 @@ public class ShopManager : MonoBehaviour
 
     // Update the displayed quantities of items in the inventory
     void UpdateInventoryText()
-    {
+    {   
+        if (lemonadeText != null)
+        {
+            lemonadeText.text = "Lemonade: " + inventory["Lemonade"].ToString();
+        }
+
         if (lemonText != null)
         {
             lemonText.text = "Lemons: " + inventory["Lemon"].ToString();
@@ -141,11 +163,14 @@ public class ShopManager : MonoBehaviour
         if (scene.name == "GameScene")
         {
             moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+            dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
+            dayText.text = "Day: " + day;
 
             if (moneyText == null)
             {
                 Debug.LogError("MoneyText UI element not found in the scene.");
             }
+
             AssignUI(); //Reconnect buttons
 
             if (inventory.Count == 0) //If inventory is empty, initialize it
@@ -161,16 +186,19 @@ public class ShopManager : MonoBehaviour
     void AssignUI()
     {
         moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+        dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
         lemonText = GameObject.Find("lemonText")?.GetComponent<TextMeshProUGUI>();
         sugarText = GameObject.Find("sugarText")?.GetComponent<TextMeshProUGUI>();
         teaText = GameObject.Find("teaText")?.GetComponent<TextMeshProUGUI>();
         grapeText = GameObject.Find("grapeText")?.GetComponent<TextMeshProUGUI>();
+        lemonadeText = GameObject.Find("lemonadeText")?.GetComponent<TextMeshProUGUI>();
 
         //Find and reconnect buttons
         AssignButton("BuyLemonButton", "Lemon");
         AssignButton("BuySugarButton", "Sugar");
         AssignButton("BuyTeaButton", "Tea");
         AssignButton("BuyGrapesButton", "Grape");
+        AssignCraftButton("CraftLemonadeButton");
     }
 
     void AssignButton(string buttonName, string itemName)
@@ -181,6 +209,17 @@ public class ShopManager : MonoBehaviour
         {
             button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
             button.onClick.AddListener(() => PurchaseItem(itemName)); //Reassign listener
+        }
+    }
+
+    void AssignCraftButton(string buttonName)
+    {
+        Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
+
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
+            button.onClick.AddListener(() => craftLemonade()); //Reassign listener
         }
     }
 }
