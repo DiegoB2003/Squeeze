@@ -1,9 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class CreateOrder : MonoBehaviour
 {
-    public Text OrderFromCustomer; // Reference to the UI Text component
+    public TMP_Text OrderFromCustomer; // Reference to the UI Text component
 
     // Array holding random items
     //TODO Add actual orders not just random items

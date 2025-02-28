@@ -501,9 +501,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   musicSource: {fileID: 1784897397}
-  SFXSource: {fileID: 2045823076}
+  myMixer: {fileID: 24100000, guid: 44c24482ff5ba49f1aab0066ee547c76, type: 2}
   backgroundMusic: {fileID: 8300000, guid: 7f5205bc0558c4c04992de51f9847d68, type: 3}
-  buttonClick: {fileID: 0}
 --- !u!4 &541740047
 Transform:
   m_ObjectHideFlags: 0
