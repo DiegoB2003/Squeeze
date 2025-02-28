@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Runtime.CompilerServices;
+using System;
 
 public class ShopManager : MonoBehaviour
 {
@@ -32,6 +34,9 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI teaText;
     public TextMeshProUGUI grapeText;
     public TextMeshProUGUI lemonadeText;
+    
+    // Initializing order variable.
+    private TextMeshProUGUI order;
 
     void Awake()
     {
@@ -107,7 +112,24 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    public void craftLemonade(){
+    // Sells item. Removes item from inventory and gives money to player.
+    public void SellItem(){
+        order = GameObject.Find("CustomerOrder")?.GetComponent<TextMeshProUGUI>();
+        string orderItem = order.text;
+        if (orderItem == "Grapes") {
+            orderItem = "Grape";
+        }
+        if (inventory[orderItem] >= 1) {
+            inventory[orderItem] -= 1;
+            totalMoney += 5;
+            UpdateUI();
+            UpdateInventoryText();
+        } else {
+            Debug.Log($"Not enough {orderItem} in inventory to sell!");
+        }
+    }
+
+    public void CraftLemonade(){
         if (inventory["Lemon"] >= 2 && inventory["Sugar"] >= 1){
             inventory["Lemon"] -= 2;
             inventory["Sugar"] -= 1;
@@ -194,14 +216,15 @@ public class ShopManager : MonoBehaviour
         lemonadeText = GameObject.Find("lemonadeText")?.GetComponent<TextMeshProUGUI>();
 
         //Find and reconnect buttons
-        AssignButton("BuyLemonButton", "Lemon");
-        AssignButton("BuySugarButton", "Sugar");
-        AssignButton("BuyTeaButton", "Tea");
-        AssignButton("BuyGrapesButton", "Grape");
+        AssignBuyButton("BuyLemonButton", "Lemon");
+        AssignBuyButton("BuySugarButton", "Sugar");
+        AssignBuyButton("BuyTeaButton", "Tea");
+        AssignBuyButton("BuyGrapesButton", "Grape");
         AssignCraftButton("CraftLemonadeButton");
+        AssignSellButton("ServeButton");
     }
 
-    void AssignButton(string buttonName, string itemName)
+    void AssignBuyButton(string buttonName, string itemName)
     {
         Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
 
@@ -212,6 +235,18 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    // Sets up "Serve" button aka Selling.
+    void AssignSellButton(string buttonName)
+    {
+        Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
+
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
+            button.onClick.AddListener(() => SellItem()); //Reassign listener
+        }
+    }
+
     void AssignCraftButton(string buttonName)
     {
         Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
@@ -219,7 +254,7 @@ public class ShopManager : MonoBehaviour
         if (button != null)
         {
             button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
-            button.onClick.AddListener(() => craftLemonade()); //Reassign listener
+            button.onClick.AddListener(() => CraftLemonade()); //Reassign listener
         }
     }
 }
