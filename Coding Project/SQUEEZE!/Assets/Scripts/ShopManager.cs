@@ -6,6 +6,19 @@ using UnityEngine.SceneManagement;
 using System.Runtime.CompilerServices;
 using System;
 
+[System.Serializable]
+public class SaleRecords {
+    public int day;
+    public string item;
+    public int price;
+
+    public SaleRecords(int day, string item, int price) {
+        this.day = day;
+        this.item = item;
+        this.price = price;
+    }
+}
+
 public class ShopManager : MonoBehaviour
 {
     public static ShopManager Instance; //Instance of shop manager for other files to access
@@ -27,6 +40,9 @@ public class ShopManager : MonoBehaviour
          { "Tea", 4 },
          { "Grape", 3 }
     };
+    
+    //Dictionary stores sales records for each day
+    public Dictionary<int, List<SaleRecords>> dailySalesRecords = new Dictionary<int, List<SaleRecords>>();
 
     // Text fields for each item to display the quantity
     public TextMeshProUGUI lemonText;
@@ -121,9 +137,12 @@ public class ShopManager : MonoBehaviour
         }
         if (inventory[orderItem] >= 1) {
             inventory[orderItem] -= 1;
-            totalMoney += 5;
+            int salePrice = 5;
+            totalMoney += salePrice;
             UpdateUI();
             UpdateInventoryText();
+
+            RecordSale(orderItem, salePrice);
         } else {
             Debug.Log($"Not enough {orderItem} in inventory to sell!");
         }
@@ -255,6 +274,32 @@ public class ShopManager : MonoBehaviour
         {
             button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
             button.onClick.AddListener(() => CraftLemonade()); //Reassign listener
+        }
+    }
+
+    //Records each sale by adding it to daily sales dictionary
+    private void RecordSale(string item, int price)
+    {
+        SaleRecords sale = new SaleRecords(day, item, price);
+        if (!dailySalesRecords.ContainsKey(day))
+        {
+            dailySalesRecords[day] = new List<SaleRecords>();
+        }
+        dailySalesRecords[day].Add(sale);
+        Debug.Log($"Recorded sale: Day {day}, Item: {item}, Price: ${price}");
+    }
+
+    //Not used anywhere but can be used to test/debug
+    //Prints all current sales records
+    public void PrintSales()
+    {
+        foreach (KeyValuePair<int, List<SaleRecords>> daySales in dailySalesRecords)
+        {
+            Debug.Log("Sales for Day: " + daySales.Key);
+            foreach (SaleRecords sale in daySales.Value)
+            {
+                Debug.Log("Item: " + sale.item + ", Price: $" + sale.price);
+            }
         }
     }
 }
