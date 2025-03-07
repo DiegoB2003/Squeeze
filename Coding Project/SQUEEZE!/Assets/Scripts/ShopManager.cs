@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System.Runtime.CompilerServices;
 using System;
+using System.Collections;
+
 
 [System.Serializable]
 public class SaleRecords {
@@ -78,6 +80,70 @@ public class ShopManager : MonoBehaviour
         UpdateInventoryText();//updates inventory text
     }
 
+    void MoveCustomerOffScreen()
+    {
+        // Find the customer object
+        GameObject customer = GameObject.Find("DuckCustomer");
+
+        //Hide the Order Panel
+        GameObject orderPanel = GameObject.Find("OrderPanel");
+        if (orderPanel != null)
+        {
+            orderPanel.SetActive(false);
+        }
+
+        //Hide the Order Button
+        Button takeOrderButton = GameObject.Find("TakeOrderButton")?.GetComponent<Button>();
+        if (takeOrderButton != null)
+        {
+            takeOrderButton.gameObject.SetActive(false);
+        }
+
+        if (customer != null)
+        {
+            // Start the coroutine to move the customer off the screen
+            StartCoroutine(MoveCustomerCoroutine(customer));
+        }
+        else
+        {
+            Debug.LogError("Customer object not found.");
+        }
+    }
+
+    IEnumerator MoveCustomerCoroutine(GameObject customer)
+    {
+        float speed = 5f; // Adjust the speed as needed
+        Vector3 offScreenPosition = new Vector3(10, customer.transform.position.y, customer.transform.position.z);
+
+        // Move the customer off the screen
+        while (Vector3.Distance(customer.transform.position, offScreenPosition) > 0.1f)
+        {   
+  
+            // Move the customer towards the off-screen position
+            customer.transform.position = Vector3.MoveTowards(customer.transform.position, offScreenPosition, speed * Time.deltaTime);
+
+            // Wait for the next frame
+            yield return null;
+        }
+
+        // Ensure the customer is exactly at the off-screen position
+        customer.transform.position = offScreenPosition;
+
+        // Wait for a short duration before resetting the position
+        yield return new WaitForSeconds(1f);
+
+        // Instantly move the customer back to the start position
+        customer.transform.position = new Vector3(-10, customer.transform.position.y, customer.transform.position.z);
+
+        // Start the movement again
+        SimpleMovement simpleMovement = customer.GetComponent<SimpleMovement>();
+        if (simpleMovement != null)
+        {
+            simpleMovement.StartMovement();
+        }
+    }
+
+
     // Initialize the inventory with 0 items
     void InitializeInventory()
     {
@@ -121,6 +187,7 @@ public class ShopManager : MonoBehaviour
 
             // Update inventory text after purchase
             UpdateInventoryText();
+
         }
         else
         {
@@ -142,7 +209,11 @@ public class ShopManager : MonoBehaviour
             UpdateUI();
             UpdateInventoryText();
 
+            // Move the customer off the screen after purchase
+            MoveCustomerOffScreen();
+            // Record the sale
             RecordSale(orderItem, salePrice);
+
         } else {
             Debug.Log($"Not enough {orderItem} in inventory to sell!");
         }

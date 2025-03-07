@@ -19,7 +19,6 @@ public class SimpleMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.linearVelocity = new Vector2(speed, 0);
         rb.gravityScale = 0;
         rb.freezeRotation = true;
 
@@ -31,6 +30,19 @@ public class SimpleMovement : MonoBehaviour
             orderPanel.SetActive(false); // Hide order panel at start
             TakeOrder.onClick.AddListener(HideButtonShowOrder); // Attach function to button click
         }
+
+        StartMovement(); // Start movement when the script is first initialized
+    }
+
+    public void StartMovement()
+    {
+        rb.linearVelocity = new Vector2(speed, 0);
+        startPosition = transform.position; // Reset start position
+        isOrderButtonActivated = false; // Reset the button activation state
+
+        // Hide take order button
+        TakeOrder.gameObject.SetActive(false);
+    
     }
 
     void FixedUpdate()

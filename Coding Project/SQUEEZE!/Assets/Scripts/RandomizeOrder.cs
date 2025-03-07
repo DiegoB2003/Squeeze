@@ -31,4 +31,11 @@ public class CreateOrder : MonoBehaviour
             Debug.LogError("OrderFromCustomer Text is not assigned in the Inspector.");
         }
     }
+
+    // Method to get a random order
+    public string GetRandomOrder()
+    {
+        int randomIndex = Random.Range(0, randomTexts.Length);
+        return randomTexts[randomIndex];
+    }
 }
