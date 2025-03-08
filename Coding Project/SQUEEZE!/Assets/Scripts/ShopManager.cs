@@ -85,11 +85,13 @@ public class ShopManager : MonoBehaviour
         // Find the customer object
         GameObject customer = GameObject.Find("DuckCustomer");
 
-        //Hide the Order Panel
+        //Hide the Order Panel and randomize order again.
         GameObject orderPanel = GameObject.Find("OrderPanel");
+        GameObject orderUI = GameObject.Find("OrderUI");
         if (orderPanel != null)
         {
             orderPanel.SetActive(false);
+            orderUI.GetComponent<CreateOrder>().RandomizeText();
         }
 
         //Hide the Order Button

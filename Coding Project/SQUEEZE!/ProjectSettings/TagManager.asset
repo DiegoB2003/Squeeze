@@ -44,5 +44,8 @@ TagManager:
   - name: Stand
     uniqueID: 2726643213
     locked: 0
+  - name: GameUI
+    uniqueID: 1116931985
+    locked: 0
   m_RenderingLayers:
   - Default

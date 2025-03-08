@@ -20,11 +20,8 @@ public class CreateOrder : MonoBehaviour
     {
         if (OrderFromCustomer != null)
         {   
-            // Randomly select an item from the array
-            int randomIndex = Random.Range(0, randomTexts.Length);
-
             // Assign the randomly selected item to the UI Text component
-            OrderFromCustomer.text = randomTexts[randomIndex];
+            OrderFromCustomer.text = GetRandomOrder();
         }
         else
         {
@@ -35,7 +32,6 @@ public class CreateOrder : MonoBehaviour
     // Method to get a random order
     public string GetRandomOrder()
     {
-        int randomIndex = Random.Range(0, randomTexts.Length);
-        return randomTexts[randomIndex];
+        return randomTexts[Random.Range(0, randomTexts.Length)];
     }
 }
