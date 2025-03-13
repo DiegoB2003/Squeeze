@@ -45,7 +45,8 @@ public class ShopManager : MonoBehaviour
     
     //Dictionary stores sales records for each day
     public Dictionary<int, List<SaleRecords>> dailySalesRecords = new Dictionary<int, List<SaleRecords>>();
-
+    public List<int> totalMoneyForDay = new List<int>();
+    
     // Text fields for each item to display the quantity
     public TextMeshProUGUI lemonText;
     public TextMeshProUGUI sugarText;
@@ -78,6 +79,7 @@ public class ShopManager : MonoBehaviour
         InitializeInventory();  // Initialize inventory to start with 0
         UpdateUI(); //Updates UI with information
         UpdateInventoryText();//updates inventory text
+        totalMoneyForDay.Add(totalMoney);
     }
 
     void MoveCustomerOffScreen()
@@ -189,7 +191,8 @@ public class ShopManager : MonoBehaviour
 
             // Update inventory text after purchase
             UpdateInventoryText();
-
+            totalMoneyForDay.Add(totalMoney); //Add the total money to the list
+            Debug.Log("Total money for the day: " + string.Join(", ", totalMoneyForDay));
         }
         else
         {
@@ -215,7 +218,8 @@ public class ShopManager : MonoBehaviour
             MoveCustomerOffScreen();
             // Record the sale
             RecordSale(orderItem, salePrice);
-
+            totalMoneyForDay.Add(totalMoney); //Add the total money to the list
+            Debug.Log("Total money for the day: " + string.Join(", ", totalMoneyForDay));
         } else {
             Debug.Log($"Not enough {orderItem} in inventory to sell!");
         }
