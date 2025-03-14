@@ -29,6 +29,8 @@ public class ShopManager : MonoBehaviour
     public int totalMoney = 50; //The player starts with $50 on the game
     public int day = 1;
 
+    public GameObject raspberryItemObject; // Reference to the Raspberry item GameObject
+
     public TextMeshProUGUI moneyText; //Text box that displays total money
     public TextMeshProUGUI dayText;
 
@@ -41,7 +43,8 @@ public class ShopManager : MonoBehaviour
          { "Lemon", 2 },
          { "Sugar", 1 },
          { "Tea", 4 },
-         { "Grape", 3 }
+         { "Grape", 3 },
+         { "Raspberry", 10}
     };
     
     //Dictionary stores sales records for each day
@@ -54,6 +57,8 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI teaText;
     public TextMeshProUGUI grapeText;
     public TextMeshProUGUI lemonadeText;
+    public TextMeshProUGUI raspberryText;
+
     
     // Initializing order variable.
     private TextMeshProUGUI order;
@@ -75,12 +80,33 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
+        raspberryItemObject = GameObject.Find("Ingredient5");
         moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
         dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
         InitializeInventory();  // Initialize inventory to start with 0
         UpdateUI(); //Updates UI with information
         UpdateInventoryText();//updates inventory text
         totalMoneyForDay.Add(totalMoney);
+        
+        if (raspberryItemObject != null)
+        {
+            raspberryItemObject.SetActive(false); // Hide Raspberry item initially
+        }
+        else
+        {
+            Debug.LogError("Raspberry Item Object is not assigned.");
+        }
+
+         // Set the Raspberry inventory text to invisible at the start
+        if (raspberryText != null)
+        {
+            raspberryText.gameObject.SetActive(false); // Hide Raspberry inventory text initially
+        }
+        else
+        {
+            Debug.LogError("Raspberry Text UI element not found.");
+        }
+
     }
 
     void MoveCustomerOffScreen()
@@ -143,6 +169,7 @@ public class ShopManager : MonoBehaviour
         // Check if day ended when enough customers were served
         if(dailySalesRecords[day].Count >= 3+day){
             EndDay();
+            
         }
 
         // Start the movement again
@@ -162,6 +189,7 @@ public class ShopManager : MonoBehaviour
         inventory["Tea"] = 0;
         inventory["Grape"] = 0;
         inventory["Lemonade"] = 0;
+        inventory["Raspberry"] = 0;
     }
 
     //Function called with button click to purchase an item
@@ -280,6 +308,11 @@ public class ShopManager : MonoBehaviour
         {
             grapeText.text = "Grapes: " + inventory["Grape"].ToString();
         }
+
+        if (raspberryText != null)
+        {
+            raspberryText.text = "Raspberries: " + inventory["Raspberry"].ToString();
+        }
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -317,12 +350,16 @@ public class ShopManager : MonoBehaviour
         teaText = GameObject.Find("teaText")?.GetComponent<TextMeshProUGUI>();
         grapeText = GameObject.Find("grapeText")?.GetComponent<TextMeshProUGUI>();
         lemonadeText = GameObject.Find("lemonadeText")?.GetComponent<TextMeshProUGUI>();
+        raspberryText = GameObject.Find("raspberryText")?.GetComponent<TextMeshProUGUI>();
+
 
         //Find and reconnect buttons
         AssignBuyButton("BuyLemonButton", "Lemon");
         AssignBuyButton("BuySugarButton", "Sugar");
         AssignBuyButton("BuyTeaButton", "Tea");
         AssignBuyButton("BuyGrapesButton", "Grape");
+        AssignBuyButton("BuyRaspberryButton", "Raspberry");
+
         AssignCraftButton("CraftLemonadeButton");
         AssignSellButton("ServeButton");
     }
@@ -388,6 +425,15 @@ public class ShopManager : MonoBehaviour
     }
 
     private void EndDay(){
-        SceneManager.LoadScene("GraphScene");
+        day++;//increments the day
+        dayText.text = "Day: " + day; // Update the day text in the UI
+        Debug.Log("It's now day " + day);
+         // Activate the Raspberry item on Day 3 and beyond
+        if (day >= 3)
+        {
+            raspberryText.gameObject.SetActive(true); // Show Raspberry inventory text
+            raspberryItemObject.SetActive(true); // Show Raspberry item
+        }       
+       SceneManager.LoadScene("GraphScene");
     }
 }
