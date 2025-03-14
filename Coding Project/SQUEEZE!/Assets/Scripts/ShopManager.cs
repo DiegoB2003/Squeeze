@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System.Runtime.CompilerServices;
 using System;
 using System.Collections;
+using System.ComponentModel.Design;
 
 
 [System.Serializable]
@@ -139,6 +140,11 @@ public class ShopManager : MonoBehaviour
         // Instantly move the customer back to the start position
         customer.transform.position = new Vector3(-10, customer.transform.position.y, customer.transform.position.z);
 
+        // Check if day ended when enough customers were served
+        if(dailySalesRecords[day].Count >= 3+day){
+            EndDay();
+        }
+
         // Start the movement again
         SimpleMovement simpleMovement = customer.GetComponent<SimpleMovement>();
         if (simpleMovement != null)
@@ -214,12 +220,13 @@ public class ShopManager : MonoBehaviour
             UpdateUI();
             UpdateInventoryText();
 
-            // Move the customer off the screen after purchase
-            MoveCustomerOffScreen();
             // Record the sale
             RecordSale(orderItem, salePrice);
             totalMoneyForDay.Add(totalMoney); //Add the total money to the list
             Debug.Log("Total money for the day: " + string.Join(", ", totalMoneyForDay));
+
+            // Move the customer off the screen after served
+            MoveCustomerOffScreen();
         } else {
             Debug.Log($"Not enough {orderItem} in inventory to sell!");
         }
@@ -378,5 +385,9 @@ public class ShopManager : MonoBehaviour
                 Debug.Log("Item: " + sale.item + ", Price: $" + sale.price);
             }
         }
+    }
+
+    private void EndDay(){
+        SceneManager.LoadScene("GraphScene");
     }
 }
