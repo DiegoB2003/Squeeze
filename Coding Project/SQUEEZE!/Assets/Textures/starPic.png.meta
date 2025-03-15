@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c7720453a88db094c933a622c56d0d87
+guid: 4b372b4902db6423188f31ae4c972b69
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 412831195493829006
-    second: pngimg.com - raspberry_PNG5051_0
+      213: 2243113808439493319
+    second: starPic_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: pngimg.com - raspberry_PNG5051_0
+      name: starPic_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 3515
-        height: 2874
+        x: 15
+        y: 21
+        width: 330
+        height: 317
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e890c97f8cbaab500800000000000000
-      internalID: 412831195493829006
+      spriteID: 7c24fcecf14212f10800000000000000
+      internalID: 2243113808439493319
       vertices: []
       indices: 
       edges: []
@@ -134,8 +134,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      pngimg.com - raspberry_PNG5051_0: 412831195493829006
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

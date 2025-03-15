@@ -21,14 +21,15 @@ public class SaleRecords {
         this.price = price;
     }
 }
-
+//ShopManager class is responsible for managing the shop, inventory, and sales records
 public class ShopManager : MonoBehaviour
 {
     public static ShopManager Instance; //Instance of shop manager for other files to access
 
     public int totalMoney = 50; //The player starts with $50 on the game
     public int day = 1;
-
+    public int rating = 100;     //numerical representation of the rating
+    public DateTime startTime = DateTime.Now;       //Start tacing track of the time
     public GameObject raspberryItemObject; // Reference to the Raspberry item GameObject
 
     public TextMeshProUGUI moneyText; //Text box that displays total money
@@ -58,6 +59,14 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI grapeText;
     public TextMeshProUGUI lemonadeText;
     public TextMeshProUGUI raspberryText;
+
+    //Initialize the star images
+    public Image starOne;
+    public Image starTwo;
+    public Image starThree;
+    public Image starFour;
+    public Image starFive;
+
 
     
     // Initializing order variable.
@@ -177,6 +186,8 @@ public class ShopManager : MonoBehaviour
         if (simpleMovement != null)
         {
             simpleMovement.StartMovement();
+            //restart the timer for the next customer (this is used in the star rating function)
+            startTime = DateTime.Now;
         }
     }
 
@@ -190,6 +201,37 @@ public class ShopManager : MonoBehaviour
         inventory["Grape"] = 0;
         inventory["Lemonade"] = 0;
         inventory["Raspberry"] = 0;
+    }
+
+    void starRaiting()
+    {
+        // Calculate the time taken to serve the customer
+        DateTime endTime = DateTime.Now;
+        TimeSpan timeTaken = endTime - startTime;
+
+        Debug.Log("Time taken to serve the customer: " + timeTaken);
+        
+        // Determine if the customer was served quickly
+        bool servedQuickly = timeTaken.Seconds < 10;
+        Debug.Log(servedQuickly 
+            ? "You served the customer in less than 10 seconds!" 
+            : "You took more than 10 seconds to serve the customer.");
+
+        // Update rating within bounds (0 to 100)
+        int delta = servedQuickly ? 10 : -10;   // Increase rating if served quickly, decrease if not
+        rating = Mathf.Clamp(rating + delta, 0, 100);   // Ensure rating is within bounds
+
+        // Only update stars if rating is divisible by 20
+        if (rating % 20 == 0)
+        {
+            // List of star images
+            Image[] stars = { starOne, starTwo, starThree, starFour, starFive };
+            int starIndex = rating / 20; // Determines the number of visible stars
+
+            // Enable or disable stars based on rating
+            for (int i = 0; i < stars.Length; i++)
+                stars[i].enabled = i < starIndex;
+        }
     }
 
     //Function called with button click to purchase an item
@@ -252,6 +294,9 @@ public class ShopManager : MonoBehaviour
             RecordSale(orderItem, salePrice);
             totalMoneyForDay.Add(totalMoney); //Add the total money to the list
             Debug.Log("Total money for the day: " + string.Join(", ", totalMoneyForDay));
+            
+            //check if we need to remove a start or add a star 
+            starRaiting();
 
             // Move the customer off the screen after served
             MoveCustomerOffScreen();
@@ -351,6 +396,13 @@ public class ShopManager : MonoBehaviour
         grapeText = GameObject.Find("grapeText")?.GetComponent<TextMeshProUGUI>();
         lemonadeText = GameObject.Find("lemonadeText")?.GetComponent<TextMeshProUGUI>();
         raspberryText = GameObject.Find("raspberryText")?.GetComponent<TextMeshProUGUI>();
+
+        //Below we find the star images and assign them to the variables
+        starOne = GameObject.Find("StarOne").GetComponent<Image>();
+        starTwo = GameObject.Find("StarTwo").GetComponent<Image>();
+        starThree = GameObject.Find("StarThree").GetComponent<Image>();
+        starFour = GameObject.Find("StarFour").GetComponent<Image>();
+        starFive = GameObject.Find("StarFive").GetComponent<Image>();
 
 
         //Find and reconnect buttons
