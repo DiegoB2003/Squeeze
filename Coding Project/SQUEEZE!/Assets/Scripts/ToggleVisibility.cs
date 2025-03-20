@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ToggleVisibility : MonoBehaviour
 {
-    public GameObject targetObject; //Assigns target object to turn on/off
+    public GameObject targetObject; //Assigns target object to turn on
 
     void Start()
     {
@@ -17,7 +17,7 @@ public class ToggleVisibility : MonoBehaviour
         if (targetObject != null)
         {
             targetObject.transform.SetAsLastSibling();
-            targetObject.SetActive(!targetObject.activeSelf);
+            targetObject.SetActive(true);
         }
     }
 }

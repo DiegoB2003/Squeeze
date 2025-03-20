@@ -51,6 +51,7 @@ public class ShopManager : MonoBehaviour
     //Dictionary stores sales records for each day
     public Dictionary<int, List<SaleRecords>> dailySalesRecords = new Dictionary<int, List<SaleRecords>>();
     public List<int> totalMoneyForDay = new List<int>();
+    public List<int> EODBalance = new List<int>();
     
     // Text fields for each item to display the quantity
     public TextMeshProUGUI lemonText;
@@ -96,7 +97,6 @@ public class ShopManager : MonoBehaviour
         UpdateUI(); //Updates UI with information
         UpdateInventoryText();//updates inventory text
         totalMoneyForDay.Add(totalMoney);
-        
         if (raspberryItemObject != null)
         {
             raspberryItemObject.SetActive(false); // Hide Raspberry item initially
@@ -106,7 +106,7 @@ public class ShopManager : MonoBehaviour
             Debug.LogError("Raspberry Item Object is not assigned.");
         }
 
-         // Set the Raspberry inventory text to invisible at the start
+        // Set the Raspberry inventory text to invisible at the start
         if (raspberryText != null)
         {
             raspberryText.gameObject.SetActive(false); // Hide Raspberry inventory text initially
@@ -477,6 +477,7 @@ public class ShopManager : MonoBehaviour
     }
 
     private void EndDay(){
+        EODBalance.Add(totalMoney);
         day++;//increments the day
         dayText.text = "Day: " + day; // Update the day text in the UI
         Debug.Log("It's now day " + day);
