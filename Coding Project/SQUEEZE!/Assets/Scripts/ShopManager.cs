@@ -31,7 +31,8 @@ public class ShopManager : MonoBehaviour
     public int rating = 100;     //numerical representation of the rating
     public DateTime startTime = DateTime.Now;       //Start tacing track of the time
     public GameObject raspberryItemObject; // Reference to the Raspberry item GameObject
-
+    public GameObject strawberryItemObject; // Reference to the strawberry item GameObject
+    public GameObject CraftRaspberryLemonadeButton;//refrences to craft button for raspberry lemonade
     public TextMeshProUGUI moneyText; //Text box that displays total money
     public TextMeshProUGUI dayText;
 
@@ -45,7 +46,8 @@ public class ShopManager : MonoBehaviour
          { "Sugar", 1 },
          { "Tea", 4 },
          { "Grape", 3 },
-         { "Raspberry", 10}
+         { "Raspberry", 10},
+         { "Strawberry",5}
     };
     
     //Dictionary stores sales records for each day
@@ -60,6 +62,8 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI grapeText;
     public TextMeshProUGUI lemonadeText;
     public TextMeshProUGUI raspberryText;
+    public TextMeshProUGUI strawberryText;
+    public TextMeshProUGUI raspberryLemonadeText;
 
     //Initialize the star images
     public Image starOne;
@@ -99,6 +103,7 @@ public class ShopManager : MonoBehaviour
         UpdateInventoryText();//updates inventory text
         totalMoneyForDay.Add(totalMoney);
         raspberryItemObject = null;
+        strawberryItemObject = null;
         GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
         foreach (GameObject obj in allObjects)
         {
@@ -109,11 +114,30 @@ public class ShopManager : MonoBehaviour
             }
         }
 
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == "strawberryObject")//looks for strawberry object
+            {
+                strawberryItemObject = obj;//assigns it to variable
+                break;
+            }
+        }
+
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == "raspberryLemonade")//looks for raspberry lemonade object
+            {
+                CraftRaspberryLemonadeButton = obj;//assigns it to variable
+                break;
+            }
+        }
+
 
         if (raspberryItemObject != null)
         {
             raspberryItemObject.SetActive(false); // Hide Raspberry item initially
-            Debug.Log("found item");
+            CraftRaspberryLemonadeButton.SetActive(false);//hides button right away
+            Debug.Log("found raspberry item");
         }
         else
         {
@@ -124,10 +148,31 @@ public class ShopManager : MonoBehaviour
         if (raspberryText != null)
         {
             raspberryText.gameObject.SetActive(false); // Hide Raspberry inventory text initially
+            raspberryLemonadeText.gameObject.SetActive(false); //hide raspberry lemonade text
         }
         else
         {
             Debug.LogError("Raspberry Text UI element not found.");
+        }
+
+        if (strawberryItemObject != null)
+        {
+            strawberryItemObject.SetActive(false); // Hide Raspberry item initially
+            Debug.Log("found strawberry item");
+        }
+        else
+        {
+            Debug.LogError("strawberry Item Object is not assigned.");
+        }
+
+         // Set the strawberry inventory text to invisible at the start
+        if (strawberryText != null)
+        {
+            strawberryText.gameObject.SetActive(false); // Hide strawberry inventory text initially
+        }
+        else
+        {
+            Debug.LogError("strawberry Text UI element not found.");
         }
 
     }
@@ -215,6 +260,9 @@ public class ShopManager : MonoBehaviour
         inventory["Grape"] = 0;
         inventory["Lemonade"] = 0;
         inventory["Raspberry"] = 0;
+        inventory["Strawberry"] = 0;
+        inventory["RaspberryLemonade"] = 0;
+
     }
 
     void starRating()
@@ -329,6 +377,16 @@ public class ShopManager : MonoBehaviour
         else{
             Debug.Log("Not enough ingredients to craft Lemonade!");
         }
+
+        if (inventory["Raspberry"] >= 2 && inventory["Sugar"] >= 2){
+            inventory["Raspberry"] -= 2;
+            inventory["Sugar"] -= 2;
+            inventory["RaspberryLemonade"] += 1;
+            UpdateInventoryText();
+        }
+        else{
+            Debug.Log("Not enough ingredients to craft raspberry Lemonade!");
+        }
     }
 
     //Update the UI text to show the current money.
@@ -372,6 +430,16 @@ public class ShopManager : MonoBehaviour
         {
             raspberryText.text = "Raspberries: " + inventory["Raspberry"].ToString();
         }
+
+        if (strawberryText != null)
+        {
+            strawberryText.text = "Strawberries: " + inventory["Strawberry"].ToString();
+        }
+
+          if (raspberryLemonadeText != null)
+        {
+            raspberryLemonadeText.text = "Rasberry Lemonade: " + inventory["RaspberryLemonade"].ToString();
+        }
     }
 
 void OnSceneLoaded(Scene scene, LoadSceneMode mode)
@@ -410,20 +478,75 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
             Debug.LogError("Raspberry Item Object not found on scene load.");
         }
 
+
+         // Re-find the raspberry object in the current scene
+        strawberryItemObject = null;
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == "strawberryObject")
+            {
+                strawberryItemObject = obj;
+                break;
+            }
+        }
+        if (strawberryItemObject == null)
+        {
+            Debug.LogError("strawberry Item Object not found on scene load.");
+        }
+
+         // Re-find the raspberry object in the current scene
+        CraftRaspberryLemonadeButton = null;
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == "raspberryLemonade")
+            {
+                CraftRaspberryLemonadeButton = obj;
+                break;
+            }
+        }
+        if (CraftRaspberryLemonadeButton == null)
+        {
+            Debug.LogError("crafting raspberry leomonade Item Object not found on scene load.");
+        }
+
         // Show or hide based on day
         if (day >= 3)
         {
             if (raspberryItemObject != null)
                 raspberryItemObject.SetActive(true);
+                CraftRaspberryLemonadeButton.SetActive(true);
             if (raspberryText != null)
                 raspberryText.gameObject.SetActive(true);
+                CraftRaspberryLemonadeButton.SetActive(true);//unhides raspberry lemonade crafting
+                raspberryLemonadeText.gameObject.SetActive(true); //unhide raspberry lemonade text
+
         }
         else
         {
             if (raspberryItemObject != null)
                 raspberryItemObject.SetActive(false);
+                CraftRaspberryLemonadeButton.SetActive(false);
             if (raspberryText != null)
                 raspberryText.gameObject.SetActive(false);
+                CraftRaspberryLemonadeButton.SetActive(false);//hides rasberry lemoneade crafting
+                raspberryLemonadeText.gameObject.SetActive(false); //hide raspberry lemonade text
+
+        }
+
+        // Show strawberrys on day 4
+        if (day >= 4)
+        {
+            if (strawberryItemObject != null)
+                strawberryItemObject.SetActive(true);
+            if (strawberryText != null)
+                strawberryText.gameObject.SetActive(true);
+        }
+        else
+        {
+            if (strawberryItemObject != null)
+                strawberryItemObject.SetActive(false);
+            if (strawberryText != null)
+                strawberryText.gameObject.SetActive(false);
         }
 
         UpdateUI(); // Refresh the displayed money amount
@@ -442,6 +565,9 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         grapeText = GameObject.Find("grapeText")?.GetComponent<TextMeshProUGUI>();
         lemonadeText = GameObject.Find("lemonadeText")?.GetComponent<TextMeshProUGUI>();
         raspberryText = GameObject.Find("raspberryText")?.GetComponent<TextMeshProUGUI>();
+        strawberryText = GameObject.Find("strawberryText")?.GetComponent<TextMeshProUGUI>();
+        raspberryLemonadeText = GameObject.Find("raspberryLemonadeText")?.GetComponent<TextMeshProUGUI>();
+
 
         //Below we find the star images and assign them to the variables
         starOne = GameObject.Find("StarOne").GetComponent<Image>();
@@ -457,6 +583,8 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         AssignBuyButton("BuyTeaButton", "Tea");
         AssignBuyButton("BuyGrapesButton", "Grape");
         AssignBuyButton("BuyRaspberryButton", "Raspberry");
+        AssignBuyButton("BuyStrawberryButton", "Strawberry");
+        AssignCraftButton("CraftRaspberryLemonadeButton");
         AssignCraftButton("CraftLemonadeButton");
         AssignSellButton("ServeButton");
     }
