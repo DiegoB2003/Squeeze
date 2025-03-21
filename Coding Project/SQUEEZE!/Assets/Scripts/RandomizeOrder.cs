@@ -1,18 +1,33 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
+using System.Collections.Generic;
+using System;
 
 public class CreateOrder : MonoBehaviour
 {
     public TMP_Text OrderFromCustomer; // Reference to the UI Text component
 
     // Array holding random items
-    //TODO Add actual orders not just random items
-    private string[] randomTexts = { "Tea", "Grapes", "Lemonade"};
+    List<string> items = new List<string> { "Tea", "Grapes", "Lemonade"};
+
+    System.Random random = new();
 
     void Start()
     {   
+        // To get day variable
+        int day = (int)(GameObject.Find("GameManager")?.GetComponent<ShopManager>().day);
         // Call the RandomizeText method
+        if (day >= 3) {
+            Debug.Log("Adding Raspberries and Raspberry Lemonade to order pool.");
+            items.Add("Raspberries");
+            items.Add("Raspberry Lemonade");
+        }
+        if (day >= 4) {
+            Debug.Log("Adding Raspberries and Raspberry Lemonade to order pool.");
+            items.Add("Strawberries");
+        }
         RandomizeText();
     }
 
@@ -32,6 +47,7 @@ public class CreateOrder : MonoBehaviour
     // Method to get a random order
     public string GetRandomOrder()
     {
-        return randomTexts[Random.Range(0, randomTexts.Length)];
+        int index = random.Next(items.Count);   // Get a random index
+        return items[index];
     }
 }

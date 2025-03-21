@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System.Runtime.CompilerServices;
 using System;
+using System.Linq;
 using System.Collections;
 using System.ComponentModel.Design;
 
@@ -341,10 +342,13 @@ public class ShopManager : MonoBehaviour
     // Sells item. Removes item from inventory and gives money to player.
     public void SellItem(){
         order = GameObject.Find("CustomerOrder")?.GetComponent<TextMeshProUGUI>();
-        string orderItem = order.text;
-        if (orderItem == "Grapes") {
+        string orderItem = string.Concat(order.text.Where(c => !char.IsWhiteSpace(c)));
+        if (orderItem == "Grapes") 
             orderItem = "Grape";
-        }
+        if (orderItem == "Strawberries") 
+            orderItem = "Strawberry";
+        if (orderItem == "Raspberries") 
+            orderItem = "Raspberry";
         if (inventory[orderItem] >= 1) {
             inventory[orderItem] -= 1;
             int salePrice = 5;
