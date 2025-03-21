@@ -385,6 +385,22 @@ public class ShopManager : MonoBehaviour
 
             UpdateUI(); //Refresh the displayed money amount
             UpdateInventoryText(); // Refresh inventory display
+             // Conditionally show Raspberry item and text based on the current day (visible from day 3)
+            if (day >= 3)
+            {
+                if (raspberryItemObject != null)
+                    raspberryItemObject.SetActive(true);
+                if (raspberryText != null)
+                    raspberryText.gameObject.SetActive(true);
+            }
+            else
+            {
+                if (raspberryItemObject != null)
+                    raspberryItemObject.SetActive(false);
+                if (raspberryText != null)
+                    raspberryText.gameObject.SetActive(false);
+            }
+        
         }
     }
 
@@ -482,13 +498,7 @@ public class ShopManager : MonoBehaviour
         EODBalance.Add(totalMoney);
         day++;//increments the day
         dayText.text = "Day: " + day; // Update the day text in the UI
-        Debug.Log("It's now day " + day);
-         // Activate the Raspberry item on Day 3 and beyond
-        // if (day >= 3)
-        // {
-        //     raspberryText.gameObject.SetActive(true); // Show Raspberry inventory text
-        //     raspberryItemObject.SetActive(true); // Show Raspberry item
-        // }       
+        Debug.Log("It's now day " + day); 
        SceneManager.LoadScene("GraphScene");
     }
 }
