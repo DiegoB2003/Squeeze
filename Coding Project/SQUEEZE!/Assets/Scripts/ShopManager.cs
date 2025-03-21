@@ -92,16 +92,28 @@ public class ShopManager : MonoBehaviour
     void Start()
     {
         Debug.Log("STARTING SHOP MANAGER");
-        raspberryItemObject = GameObject.Find("Ingredient5");
         moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
         dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
         InitializeInventory();  // Initialize inventory to start with 0
         UpdateUI(); //Updates UI with information
         UpdateInventoryText();//updates inventory text
         totalMoneyForDay.Add(totalMoney);
+        raspberryItemObject = null;
+        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == "raspberryObject")
+            {
+                raspberryItemObject = obj;
+                break;
+            }
+        }
+
+
         if (raspberryItemObject != null)
         {
             raspberryItemObject.SetActive(false); // Hide Raspberry item initially
+            Debug.Log("found item");
         }
         else
         {
@@ -362,47 +374,63 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+{
+    if (scene.name == "GameScene")
     {
-        //Only update when returning to the GameScene
-        if (scene.name == "GameScene")
+        moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+        dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
+        dayText.text = "Day: " + day;
+
+        if (moneyText == null)
         {
-            moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
-            dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
-            dayText.text = "Day: " + day;
-
-            if (moneyText == null)
-            {
-                Debug.LogError("MoneyText UI element not found in the scene.");
-            }
-
-            AssignUI(); //Reconnect buttons
-
-            if (inventory.Count == 0) //If inventory is empty, initialize it
-            {
-                InitializeInventory();
-            }
-
-            UpdateUI(); //Refresh the displayed money amount
-            UpdateInventoryText(); // Refresh inventory display
-             // Conditionally show Raspberry item and text based on the current day (visible from day 3)
-            if (day >= 3)
-            {
-                if (raspberryItemObject != null)
-                    raspberryItemObject.SetActive(true);
-                if (raspberryText != null)
-                    raspberryText.gameObject.SetActive(true);
-            }
-            else
-            {
-                if (raspberryItemObject != null)
-                    raspberryItemObject.SetActive(false);
-                if (raspberryText != null)
-                    raspberryText.gameObject.SetActive(false);
-            }
-        
+            Debug.LogError("MoneyText UI element not found in the scene.");
         }
+
+        AssignUI(); // Reconnect buttons
+
+        if (inventory.Count == 0) // If inventory is empty, initialize it
+        {
+            InitializeInventory();
+        }
+        
+        // Re-find the raspberry object in the current scene
+        raspberryItemObject = null;
+        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.name == "raspberryObject")
+            {
+                raspberryItemObject = obj;
+                break;
+            }
+        }
+        if (raspberryItemObject == null)
+        {
+            Debug.LogError("Raspberry Item Object not found on scene load.");
+        }
+
+        // Show or hide based on day
+        if (day >= 3)
+        {
+            if (raspberryItemObject != null)
+                raspberryItemObject.SetActive(true);
+            if (raspberryText != null)
+                raspberryText.gameObject.SetActive(true);
+        }
+        else
+        {
+            if (raspberryItemObject != null)
+                raspberryItemObject.SetActive(false);
+            if (raspberryText != null)
+                raspberryText.gameObject.SetActive(false);
+        }
+
+        UpdateUI(); // Refresh the displayed money amount
+        UpdateInventoryText(); // Refresh inventory display        
     }
+}
+
 
     void AssignUI()
     {
@@ -429,7 +457,6 @@ public class ShopManager : MonoBehaviour
         AssignBuyButton("BuyTeaButton", "Tea");
         AssignBuyButton("BuyGrapesButton", "Grape");
         AssignBuyButton("BuyRaspberryButton", "Raspberry");
-
         AssignCraftButton("CraftLemonadeButton");
         AssignSellButton("ServeButton");
     }
