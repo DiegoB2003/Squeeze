@@ -75,6 +75,7 @@ public class ShopManager : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("SHOP MANAGER AWAKE");
         //Make sure only 1 instance of the shop manager exists
         if (Instance == null)
         {
@@ -90,6 +91,7 @@ public class ShopManager : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("STARTING SHOP MANAGER");
         raspberryItemObject = GameObject.Find("Ingredient5");
         moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
         dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
@@ -203,7 +205,7 @@ public class ShopManager : MonoBehaviour
         inventory["Raspberry"] = 0;
     }
 
-    void starRaiting()
+    void starRating()
     {
         // Calculate the time taken to serve the customer
         DateTime endTime = DateTime.Now;
@@ -296,7 +298,7 @@ public class ShopManager : MonoBehaviour
             Debug.Log("Total money for the day: " + string.Join(", ", totalMoneyForDay));
             
             //check if we need to remove a start or add a star 
-            starRaiting();
+            starRating();
 
             // Move the customer off the screen after served
             MoveCustomerOffScreen();
@@ -482,11 +484,11 @@ public class ShopManager : MonoBehaviour
         dayText.text = "Day: " + day; // Update the day text in the UI
         Debug.Log("It's now day " + day);
          // Activate the Raspberry item on Day 3 and beyond
-        if (day >= 3)
-        {
-            raspberryText.gameObject.SetActive(true); // Show Raspberry inventory text
-            raspberryItemObject.SetActive(true); // Show Raspberry item
-        }       
+        // if (day >= 3)
+        // {
+        //     raspberryText.gameObject.SetActive(true); // Show Raspberry inventory text
+        //     raspberryItemObject.SetActive(true); // Show Raspberry item
+        // }       
        SceneManager.LoadScene("GraphScene");
     }
 }
