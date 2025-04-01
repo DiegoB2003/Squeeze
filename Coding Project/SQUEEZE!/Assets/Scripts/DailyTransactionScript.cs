@@ -9,7 +9,7 @@ namespace XCharts.Example
     [DisallowMultipleComponent]
     public class DailyTransactionScript : MonoBehaviour
     {
-        private List<int> totals = ShopManager.Instance.totalMoneyForDay;
+        private List<int> totals = ShopManager.Instance.DaysTransactionsBalance;
         private LineChart chart;
         private Serie serie;
 

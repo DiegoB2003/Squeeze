@@ -53,7 +53,7 @@ public class ShopManager : MonoBehaviour
     
     //Dictionary stores sales records for each day
     public Dictionary<int, List<SaleRecords>> dailySalesRecords = new Dictionary<int, List<SaleRecords>>();
-    public List<int> totalMoneyForDay = new List<int>();
+    public List<int> DaysTransactionsBalance = new List<int>();
     public List<int> EODBalance = new List<int>();
     
     // Text fields for each item to display the quantity
@@ -102,7 +102,7 @@ public class ShopManager : MonoBehaviour
         InitializeInventory();  // Initialize inventory to start with 0
         UpdateUI(); //Updates UI with information
         UpdateInventoryText();//updates inventory text
-        totalMoneyForDay.Add(totalMoney);
+        DaysTransactionsBalance.Add(totalMoney);
         raspberryItemObject = null;
         strawberryItemObject = null;
         GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
@@ -238,7 +238,6 @@ public class ShopManager : MonoBehaviour
         // Check if day ended when enough customers were served
         if(dailySalesRecords[day].Count >= 3+day){
             EndDay();
-            
         }
 
         // Start the movement again
@@ -330,8 +329,8 @@ public class ShopManager : MonoBehaviour
 
             // Update inventory text after purchase
             UpdateInventoryText();
-            totalMoneyForDay.Add(totalMoney); //Add the total money to the list
-            Debug.Log("Total money for the day: " + string.Join(", ", totalMoneyForDay));
+            DaysTransactionsBalance.Add(totalMoney); //Add the total money to the list
+            Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));
         }
         else
         {
@@ -358,8 +357,8 @@ public class ShopManager : MonoBehaviour
 
             // Record the sale
             RecordSale(orderItem, salePrice);
-            totalMoneyForDay.Add(totalMoney); //Add the total money to the list
-            Debug.Log("Total money for the day: " + string.Join(", ", totalMoneyForDay));
+            DaysTransactionsBalance.Add(totalMoney); //Add the total money to the list
+            Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));
             
             //check if we need to remove a start or add a star 
             starRating();
@@ -658,6 +657,14 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         day++;//increments the day
         dayText.text = "Day: " + day; // Update the day text in the UI
         Debug.Log("It's now day " + day); 
-       SceneManager.LoadScene("GraphScene");
+       SceneManager.LoadScene("EndDayGraphScene");
+    }
+
+    //Function called when button clicked to reset DaysTransactionsBalance array and adds current money to the list
+    public void ResetDaysTransactions()
+    {
+        DaysTransactionsBalance.Clear(); // Clear the list
+        DaysTransactionsBalance.Add(totalMoney); // Add the current money to the list
+        Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));
     }
 }
