@@ -177,7 +177,28 @@ public class ShopManager : MonoBehaviour
         }
 
     }
+    string changeCustomerImage () {
+        //Array that holds all the customer images paths
+        string[] customerImages = {
+            "TheDuck",
+            "turtle_customer",
+            "bear_customer"
+            // "grimace_customer",
+            // "biggie_customer",
+        };
 
+        //Randomly select a customer image
+        int randomIndex = UnityEngine.Random.Range(0, customerImages.Length);
+        string selectedImagePath = customerImages[randomIndex];
+
+        //display it in the inspector
+        Debug.Log("Selected customer image: " + selectedImagePath);
+
+
+        return selectedImagePath;
+    }
+
+       
     void MoveCustomerOffScreen()
     {
         // Find the customer object
@@ -239,6 +260,22 @@ public class ShopManager : MonoBehaviour
         if(dailySalesRecords[day].Count >= 3+day){
             EndDay();
         }
+
+        // Reset the customer image
+        string newImagePath = changeCustomerImage();
+
+        // Load the new sprite
+        Sprite newSprite = Resources.Load<Sprite>(newImagePath); // Load the new sprite from Resources
+        SpriteRenderer spriteRenderer = customer.GetComponent<SpriteRenderer>();    
+        if (spriteRenderer != null && newSprite != null)
+        {
+            spriteRenderer.sprite = newSprite; // Change the sprite
+        }
+        else
+        {
+            Debug.LogError("Failed to load new sprite or SpriteRenderer is missing.");
+        }
+
 
         // Start the movement again
         SimpleMovement simpleMovement = customer.GetComponent<SimpleMovement>();
@@ -464,6 +501,8 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             InitializeInventory();
         }
+
+
         
         // Re-find the raspberry object in the current scene
         raspberryItemObject = null;
