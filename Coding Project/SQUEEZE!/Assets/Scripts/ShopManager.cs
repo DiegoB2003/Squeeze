@@ -29,6 +29,7 @@ public class ShopManager : MonoBehaviour
 
     public int totalMoney = 50; //The player starts with $50 on the game
     public int day = 1;
+    
     public int rating = 100;     //numerical representation of the rating
     public DateTime startTime = DateTime.Now;       //Start tacing track of the time
     public GameObject raspberryItemObject; // Reference to the Raspberry item GameObject
