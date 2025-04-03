@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      grimace_customer_0: -704315865541255152
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

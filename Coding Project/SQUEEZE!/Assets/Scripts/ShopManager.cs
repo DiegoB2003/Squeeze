@@ -38,6 +38,8 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI moneyText; //Text box that displays total money
     public TextMeshProUGUI dayText;
 
+    public int timer = 8;
+
     //Dictionary to store item names to the amount the player has in their inventory
     public Dictionary<string, int> inventory = new Dictionary<string, int>();
 
@@ -284,10 +286,14 @@ public class ShopManager : MonoBehaviour
         {
             simpleMovement.StartMovement();
             //restart the timer for the next customer (this is used in the star rating function)
-            startTime = DateTime.Now;
+            // startTime = DateTime.Now;
+            // Debug.Log("TIMER STARTED");
         }
     }
 
+    public void setStartTime(){
+        startTime = DateTime.Now;
+    }
 
     // Initialize the inventory with 0 items
     void InitializeInventory()
@@ -312,10 +318,10 @@ public class ShopManager : MonoBehaviour
         Debug.Log("Time taken to serve the customer: " + timeTaken);
         
         // Determine if the customer was served quickly
-        bool servedQuickly = timeTaken.Seconds < 10;
+        bool servedQuickly = timeTaken.Seconds < timer;
         Debug.Log(servedQuickly 
-            ? "You served the customer in less than 10 seconds!" 
-            : "You took more than 10 seconds to serve the customer.");
+            ? $"You served the customer in less than {timer} seconds!" 
+            : $"You took more than {timer} seconds to serve the customer.");
 
         // Update rating within bounds (0 to 100)
         int delta = servedQuickly ? 10 : -10;   // Increase rating if served quickly, decrease if not
@@ -388,7 +394,7 @@ public class ShopManager : MonoBehaviour
             orderItem = "Raspberry";
         if (inventory[orderItem] >= 1) {
             inventory[orderItem] -= 1;
-            int salePrice = 5;
+            int salePrice = 10;
             totalMoney += salePrice;
             UpdateUI();
             UpdateInventoryText();

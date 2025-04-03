@@ -134,7 +134,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      turtle_customer_0: 874764480613663914
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

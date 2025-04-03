@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class SimpleMovement : MonoBehaviour
 {
@@ -56,6 +57,7 @@ public class SimpleMovement : MonoBehaviour
             {
                 TakeOrder.gameObject.SetActive(true); // Show the button
                 isOrderButtonActivated = true;
+                GameObject.Find("GameManager")?.GetComponent<ShopManager>().setStartTime();
             }
         }
     }
