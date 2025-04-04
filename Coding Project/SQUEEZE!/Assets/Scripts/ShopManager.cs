@@ -30,7 +30,7 @@ public class ShopManager : MonoBehaviour
     public int totalMoney = 50; //The player starts with $50 on the game
     public int day = 1;
     
-    public int rating = 100;     //numerical representation of the rating
+    public int rating = 60;     //numerical representation of the rating
     public DateTime startTime = DateTime.Now;       //Start tacing track of the time
     public GameObject raspberryItemObject; // Reference to the Raspberry item GameObject
     public GameObject strawberryItemObject; // Reference to the strawberry item GameObject
@@ -105,6 +105,7 @@ public class ShopManager : MonoBehaviour
         InitializeInventory();  // Initialize inventory to start with 0
         UpdateUI(); //Updates UI with information
         UpdateInventoryText();//updates inventory text
+        startingStarRating();
         DaysTransactionsBalance.Add(totalMoney);
         raspberryItemObject = null;
         strawberryItemObject = null;
@@ -340,6 +341,21 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    void startingStarRating()
+    {
+        rating = Mathf.Clamp(rating, 0, 100);
+        if (rating % 20 != 0) {
+            rating += 10;
+        }
+        // List of star images
+        Image[] stars = { starOne, starTwo, starThree, starFour, starFive };
+        int starIndex = rating / 20; // Determines the number of visible stars
+
+        // Enable or disable stars based on rating
+        for (int i = 0; i < stars.Length; i++)
+            stars[i].enabled = i < starIndex;
+    }
+
     //Function called with button click to purchase an item
     //Takes in the name of the item to purchase, MUST BE EXACT
     public void PurchaseItem(string itemName)
@@ -509,7 +525,7 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
             InitializeInventory();
         }
 
-
+        startingStarRating(); // Set star rating
         
         // Re-find the raspberry object in the current scene
         raspberryItemObject = null;

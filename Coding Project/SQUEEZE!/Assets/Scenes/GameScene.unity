@@ -4298,7 +4298,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -203.59917}
+  m_AnchoredPosition: {x: 0, y: -225.19148}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &927228990
@@ -5558,13 +5558,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalMoney: 50
   day: 1
-  rating: 100
+  rating: 60
   raspberryItemObject: {fileID: 1466421993}
   strawberryItemObject: {fileID: 0}
   CraftRaspberryLemonadeButton: {fileID: 0}
   moneyText: {fileID: 1514262147}
   dayText: {fileID: 0}
-  totalMoneyForDay: 
+  timer: 8
+  DaysTransactionsBalance: 
   EODBalance: 
   lemonText: {fileID: 1761261014}
   sugarText: {fileID: 2058906271}
