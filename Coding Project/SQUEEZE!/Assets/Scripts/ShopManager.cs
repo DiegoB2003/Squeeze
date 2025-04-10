@@ -466,42 +466,42 @@ public class ShopManager : MonoBehaviour
     {   
         if (lemonadeText != null)
         {
-            lemonadeText.text = "Lemonade: " + inventory["Lemonade"].ToString();
+            lemonadeText.text =  "Lemonade: " + inventory["Lemonade"];
         }
 
         if (lemonText != null)
         {
-            lemonText.text = "Lemons: " + inventory["Lemon"].ToString();
+            lemonText.text = "[" + inventory["Lemon"] + "]";
         }
 
         if (sugarText != null)
         {
-            sugarText.text = "Sugar: " + inventory["Sugar"].ToString();
+            sugarText.text = "[" + inventory["Sugar"] + "]";
         }
 
         if (teaText != null)
         {
-            teaText.text = "Tea: " + inventory["Tea"].ToString();
+            teaText.text = "[" + inventory["Tea"] + "]";
         }
 
         if (grapeText != null)
         {
-            grapeText.text = "Grapes: " + inventory["Grape"].ToString();
+            grapeText.text = "[" + inventory["Grape"] + "]";
         }
 
         if (raspberryText != null)
         {
-            raspberryText.text = "Raspberries: " + inventory["Raspberry"].ToString();
+            raspberryText.text = "[" + inventory["Raspberry"] + "]";
         }
 
         if (strawberryText != null)
         {
-            strawberryText.text = "Strawberries: " + inventory["Strawberry"].ToString();
+            strawberryText.text = "[" + inventory["Strawberry"] + "]";
         }
 
           if (raspberryLemonadeText != null)
         {
-            raspberryLemonadeText.text = "Rasberry Lemonade: " + inventory["RaspberryLemonade"].ToString();
+            raspberryLemonadeText.text = "Rasberry Lemonade: " + inventory["RaspberryLemonade"];
         }
     }
 
