@@ -25,6 +25,9 @@ public class SaleRecords {
 //ShopManager class is responsible for managing the shop, inventory, and sales records
 public class ShopManager : MonoBehaviour
 {
+    public GameObject errorPopup;    
+    public TextMeshProUGUI errorText; 
+    public Button errorOkButton;    
     public static ShopManager Instance; //Instance of shop manager for other files to access
 
     public int totalMoney = 50; //The player starts with $50 on the game
@@ -178,6 +181,10 @@ public class ShopManager : MonoBehaviour
         else
         {
             Debug.LogError("strawberry Text UI element not found.");
+        }
+
+        if(errorPopup!= null){ //sets error popup to initially be hidden
+            errorPopup.gameObject.SetActive(false);
         }
 
     }
@@ -395,6 +402,7 @@ public class ShopManager : MonoBehaviour
         else
         {
             Debug.Log("Not enough money to purchase " + itemName + " which costs $" + cost + "!");
+            ShowError("Not enough money to purchase " + itemName + " which costs $" + cost + "!");
         }
     }
 
@@ -427,6 +435,8 @@ public class ShopManager : MonoBehaviour
             MoveCustomerOffScreen();
         } else {
             Debug.Log($"Not enough {orderItem} in inventory to sell!");
+            ShowError($"Not enough {orderItem} in inventory to sell!");
+
         }
     }
 
@@ -439,6 +449,9 @@ public class ShopManager : MonoBehaviour
         }
         else{
             Debug.Log("Not enough ingredients to craft Lemonade!");
+            errorPopup.SetActive(true);
+            ShowError("Not enough ingredients to craft Lemonade!\n(Need 2 Lemons & 1 Sugar)");
+
         }
 
         if (inventory["Raspberry"] >= 2 && inventory["Sugar"] >= 2){
@@ -449,6 +462,8 @@ public class ShopManager : MonoBehaviour
         }
         else{
             Debug.Log("Not enough ingredients to craft raspberry Lemonade!");
+            ShowError("Not enough ingredients to craft raspberry Lemonade!\n(Need 2 Lemons & 2 Sugar)");
+
         }
     }
 
@@ -520,13 +535,15 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 
         AssignUI(); // Reconnect buttons
 
+        errorPopup.SetActive(false);
+
         if (inventory.Count == 0) // If inventory is empty, initialize it
         {
             InitializeInventory();
         }
 
         startingStarRating(); // Set star rating
-        
+
         // Re-find the raspberry object in the current scene
         raspberryItemObject = null;
         GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
@@ -633,6 +650,10 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         strawberryText = GameObject.Find("strawberryText")?.GetComponent<TextMeshProUGUI>();
         raspberryLemonadeText = GameObject.Find("raspberryLemonadeText")?.GetComponent<TextMeshProUGUI>();
 
+        errorPopup = GameObject.Find("ErrorPopup")?.gameObject;
+        errorText  = GameObject.Find("ErrorText")?.GetComponent<TextMeshProUGUI>();
+        errorOkButton= GameObject.Find("OkButton")?.GetComponent<Button>();
+
 
         //Below we find the star images and assign them to the variables
         starOne = GameObject.Find("StarOne").GetComponent<Image>();
@@ -641,7 +662,7 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         starFour = GameObject.Find("StarFour").GetComponent<Image>();
         starFive = GameObject.Find("StarFive").GetComponent<Image>();
 
-
+        
         //Find and reconnect buttons
         AssignBuyButton("BuyLemonButton", "Lemon");
         AssignBuyButton("BuySugarButton", "Sugar");
@@ -728,5 +749,12 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         DaysTransactionsBalance.Clear(); // Clear the list
         DaysTransactionsBalance.Add(totalMoney); // Add the current money to the list
         Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));
+    }
+
+    // Show the popup
+    void ShowError(string message)
+    {
+        errorText.text = message;
+        errorPopup.SetActive(true);
     }
 }
