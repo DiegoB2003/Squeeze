@@ -94,6 +94,7 @@ public class SimpleMovement : MonoBehaviour
                 timer_remaining -= Time.deltaTime; // Decrease remaining time
                 if (timer_linear_image != null)
                 {
+                    //TODO: Figure out why this is not working
                     timer_linear_image.fillAmount = timer_remaining / max_time; // Update the timer UI, clamping value
                 }
             }
