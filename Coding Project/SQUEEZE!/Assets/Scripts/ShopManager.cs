@@ -79,6 +79,8 @@ public class ShopManager : MonoBehaviour
     public Image starFour;
     public Image starFive;
 
+    // Timer bar to hide on serve.
+    private GameObject timerBar;
 
     
     // Initializing order variable.
@@ -224,6 +226,11 @@ public class ShopManager : MonoBehaviour
             orderUI.GetComponent<CreateOrder>().RandomizeText();
         }
 
+        if(timerBar != null)
+        {
+            timerBar.SetActive(false);
+        }
+
         //Hide the Order Button
         Button takeOrderButton = GameObject.Find("TakeOrderButton")?.GetComponent<Button>();
         if (takeOrderButton != null)
@@ -293,9 +300,6 @@ public class ShopManager : MonoBehaviour
         if (simpleMovement != null)
         {
             simpleMovement.StartMovement();
-            //restart the timer for the next customer (this is used in the star rating function)
-            // startTime = DateTime.Now;
-            // Debug.Log("TIMER STARTED");
         }
     }
 
@@ -660,6 +664,9 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         starThree = GameObject.Find("StarThree").GetComponent<Image>();
         starFour = GameObject.Find("StarFour").GetComponent<Image>();
         starFive = GameObject.Find("StarFive").GetComponent<Image>();
+
+        // Timer bar assignment
+        timerBar = GameObject.Find("LinearTimerHolder");
 
         
         //Find and reconnect buttons
