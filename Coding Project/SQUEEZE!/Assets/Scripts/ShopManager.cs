@@ -82,6 +82,8 @@ public class ShopManager : MonoBehaviour
     // Timer bar to hide on serve.
     private GameObject timerBar;
 
+    // Popups for money and stars.
+    private GameObject moneyPopUp;
     
     // Initializing order variable.
     private TextMeshProUGUI order;
@@ -274,11 +276,6 @@ public class ShopManager : MonoBehaviour
         // Instantly move the customer back to the start position
         customer.transform.position = new Vector3(-10, customer.transform.position.y, customer.transform.position.z);
 
-        // Check if day ended when enough customers were served
-        if(dailySalesRecords[day].Count >= 3+day){
-            EndDay();
-        }
-
         // Reset the customer image
         string newImagePath = changeCustomerImage();
 
@@ -294,6 +291,17 @@ public class ShopManager : MonoBehaviour
             Debug.LogError("Failed to load new sprite or SpriteRenderer is missing.");
         }
 
+        // Reset money popup
+        if(moneyPopUp != null) {
+            moneyPopUp.SetActive(false);
+        } else {
+            Debug.LogError("Money Popup null!");
+        }
+
+        // Check if day ended when enough customers were served
+        if(dailySalesRecords[day].Count >= 3+day){
+            EndDay();
+        }
 
         // Start the movement again
         SimpleMovement simpleMovement = customer.GetComponent<SimpleMovement>();
@@ -434,6 +442,14 @@ public class ShopManager : MonoBehaviour
             
             //check if we need to remove a start or add a star 
             starRating();
+
+            // Play popups.
+            if(moneyPopUp != null){
+                moneyPopUp.GetComponent<TextMeshProUGUI>().text = $"+${salePrice}";
+                moneyPopUp.SetActive(true);
+            } else {
+                Debug.LogError("Money Popup null!");
+            }
 
             // Move the customer off the screen after served
             MoveCustomerOffScreen();
@@ -668,6 +684,13 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         // Timer bar assignment
         timerBar = GameObject.Find("LinearTimerHolder");
 
+        // PopUps
+        moneyPopUp = GameObject.Find("MoneyPopUp");
+        if(moneyPopUp != null) {
+            moneyPopUp.SetActive(false);
+        } else {
+            Debug.LogError("Money Popup null!");
+        }
         
         //Find and reconnect buttons
         AssignBuyButton("BuyLemonButton", "Lemon");
