@@ -440,20 +440,7 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    public void CraftLemonade(){
-        if (inventory["Lemon"] >= 2 && inventory["Sugar"] >= 1){
-            inventory["Lemon"] -= 2;
-            inventory["Sugar"] -= 1;
-            inventory["Lemonade"] += 1;
-            UpdateInventoryText();
-        }
-        else{
-            Debug.Log("Not enough ingredients to craft Lemonade!");
-            errorPopup.SetActive(true);
-            ShowError("Not enough ingredients to craft Lemonade!\n(Need 2 Lemons & 1 Sugar)");
-
-        }
-
+    public void CraftRaspberryLemonade(){
         if (inventory["Raspberry"] >= 2 && inventory["Sugar"] >= 2){
             inventory["Raspberry"] -= 2;
             inventory["Sugar"] -= 2;
@@ -463,7 +450,19 @@ public class ShopManager : MonoBehaviour
         else{
             Debug.Log("Not enough ingredients to craft raspberry Lemonade!");
             ShowError("Not enough ingredients to craft raspberry Lemonade!\n(Need 2 Lemons & 2 Sugar)");
+        }
+    }
 
+    public void CraftLemonade(){
+        if (inventory["Lemon"] >= 2 && inventory["Sugar"] >= 1){
+            inventory["Lemon"] -= 2;
+            inventory["Sugar"] -= 1;
+            inventory["Lemonade"] += 1;
+            UpdateInventoryText();
+        }
+        else{
+            Debug.Log("Not enough ingredients to craft Lemonade!");
+            ShowError("Not enough ingredients to craft Lemonade!\n(Need 2 Lemons & 1 Sugar)");
         }
     }
 
@@ -670,8 +669,8 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         AssignBuyButton("BuyGrapesButton", "Grape");
         AssignBuyButton("BuyRaspberryButton", "Raspberry");
         AssignBuyButton("BuyStrawberryButton", "Strawberry");
-        AssignCraftButton("CraftRaspberryLemonadeButton");
-        AssignCraftButton("CraftLemonadeButton");
+        AssignRaspberryLemonadeCraftButton("CraftRaspberryLemonadeButton");
+        AssignLemonadeCraftButton("CraftLemonadeButton");
         AssignSellButton("ServeButton");
     }
 
@@ -698,14 +697,24 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         }
     }
 
-    void AssignCraftButton(string buttonName)
-    {
+    void AssignLemonadeCraftButton(string buttonName){
         Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
 
         if (button != null)
         {
             button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
             button.onClick.AddListener(() => CraftLemonade()); //Reassign listener
+        }
+    }
+
+    void AssignRaspberryLemonadeCraftButton(string buttonName)
+    {
+        Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
+
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
+            button.onClick.AddListener(() => CraftRaspberryLemonade()); //Reassign listener
         }
     }
 
