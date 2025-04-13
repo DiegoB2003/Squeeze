@@ -84,6 +84,7 @@ public class ShopManager : MonoBehaviour
 
     // Popups for money and stars.
     private GameObject moneyPopUp;
+    private GameObject starPopUp;
     
     // Initializing order variable.
     private TextMeshProUGUI order;
@@ -298,6 +299,13 @@ public class ShopManager : MonoBehaviour
             Debug.LogError("Money Popup null!");
         }
 
+        // Reset star popup
+        if(starPopUp != null) {
+            starPopUp.SetActive(false);
+        } else {
+            Debug.LogError("Star Popup null!");
+        }
+
         // Check if day ended when enough customers were served
         if(dailySalesRecords[day].Count >= 3+day){
             EndDay();
@@ -345,6 +353,15 @@ public class ShopManager : MonoBehaviour
 
         // Update rating within bounds (0 to 100)
         int delta = servedQuickly ? 10 : -10;   // Increase rating if served quickly, decrease if not
+
+        // Play star popup.
+        if(starPopUp != null){
+            starPopUp.GetComponent<TextMeshProUGUI>().text = delta>=0 ? $"+{(float)delta/20}<sprite name=\"starPic_0\">" : $"{(float)delta/20}<sprite name=\"starPic_0\">";
+            starPopUp.SetActive(true);
+        } else {
+            Debug.LogError("Star Popup null!");
+        }
+
         rating = Mathf.Clamp(rating + delta, 0, 100);   // Ensure rating is within bounds
 
         // Only update stars if rating is divisible by 20
@@ -443,7 +460,7 @@ public class ShopManager : MonoBehaviour
             //check if we need to remove a start or add a star 
             starRating();
 
-            // Play popups.
+            // Play money popup.
             if(moneyPopUp != null){
                 moneyPopUp.GetComponent<TextMeshProUGUI>().text = $"+${salePrice}";
                 moneyPopUp.SetActive(true);
@@ -686,10 +703,16 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 
         // PopUps
         moneyPopUp = GameObject.Find("MoneyPopUp");
+        starPopUp = GameObject.Find("StarPopUp");
         if(moneyPopUp != null) {
             moneyPopUp.SetActive(false);
         } else {
             Debug.LogError("Money Popup null!");
+        }
+        if(starPopUp != null) {
+            starPopUp.SetActive(false);
+        } else {
+            Debug.LogError("Star Popup null!");
         }
         
         //Find and reconnect buttons
