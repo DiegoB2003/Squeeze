@@ -247,6 +247,13 @@ public class ShopManager : MonoBehaviour
             takeOrderButton.gameObject.SetActive(false);
         }
 
+        //Hide the took too long text
+        GameObject tookTooLongMessage = GameObject.Find("TookTooLongMessage");
+        if (tookTooLongMessage != null)
+        {
+            tookTooLongMessage.SetActive(false);
+        }
+
         if (customer != null)
         {
             // Start the coroutine to move the customer off the screen

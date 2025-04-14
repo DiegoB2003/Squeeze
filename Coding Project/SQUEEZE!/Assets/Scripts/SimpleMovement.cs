@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 
 public class SimpleMovement : MonoBehaviour
 {
@@ -12,6 +13,11 @@ public class SimpleMovement : MonoBehaviour
     public Image timer_linear_image; // Prefab for the order panel
     private float timer_remaining; // Remaining time for the order
     public float max_time = 10f; // Total time for the order
+    public Sprite greenSprite; // Default green sprite
+    public Sprite orangeSprite; // Orange sprite for 6-3 seconds
+    public Sprite redSprite; // Red sprite for 3 seconds or less
+    public GameObject TookTooLongMessage; // Text to show when time runs out
+    public GameObject TimerTitle; // Prefab for the order panel
 
     private Rigidbody2D rb;
     private Vector2 startPosition;
@@ -31,6 +37,25 @@ public class SimpleMovement : MonoBehaviour
             TakeOrder.gameObject.SetActive(false); // Hide button at the start
             if (orderPanel != null) orderPanel.SetActive(false); // Hide order panel at start
             if (timerBar != null) timerBar.SetActive(false); // Hide timer bar at start
+
+            if (TimerTitle != null) TimerTitle.SetActive(false); // Hide timer title at start
+            
+  
+
+            // Hide the "took too long" message
+            if (TookTooLongMessage != null)
+            {
+                TookTooLongMessage.SetActive(false); // Hide at start
+                // TextMeshProUGUI messageText = TookTooLongMessage.GetComponentInChildren<TextMeshProUGUI>();
+                // if (messageText != null)
+                // {
+                //     messageText.color = Color.red; // Set red color
+                // }
+                // else
+                // {
+                //     Debug.LogError("TextMeshProUGUI not found in TookTooLongMessage.");
+                // }
+            }
 
             TakeOrder.onClick.AddListener(HideButtonShowOrder); // Attach function to button click
         }
@@ -68,11 +93,8 @@ public class SimpleMovement : MonoBehaviour
                 if (timerBar != null)
                 {
                     timerBar.SetActive(true); // Show the timer bar
+                    TimerTitle.SetActive(true); // Show timer title
                     timer_remaining = max_time; // Reset the timer
-                    if (timer_linear_image != null)
-                    {
-                        timer_linear_image.fillAmount = 1f; // Initialize fill amount
-                    }
                 }
 
                 if (TakeOrder != null)
@@ -94,21 +116,37 @@ public class SimpleMovement : MonoBehaviour
                 timer_remaining -= Time.deltaTime; // Decrease remaining time
                 if (timer_linear_image != null)
                 {
-                    //TODO: Figure out why this is not working
-                    timer_linear_image.fillAmount = timer_remaining / max_time; // Update the timer UI, clamping value
+                    float fillAmount = timer_remaining / max_time;
+                    Debug.Log($"Fill Amount: {fillAmount}");
+                    timer_linear_image.fillAmount = fillAmount;
+
+                    // Change the timer bar image based on the remaining time
+                    if (timer_remaining <= 6f && timer_remaining > 3f)
+                    {
+                        timer_linear_image.sprite = orangeSprite;
+                    }
+                    else if (timer_remaining <= 3f)
+                    {
+                        timer_linear_image.sprite = redSprite;
+                    }
+                    else
+                    {
+                        timer_linear_image.sprite = greenSprite;
+                    }
                 }
             }
             else
             {
                 timerBar.SetActive(false); // Hide the timer bar when time runs out
+                //hide the timer title
+                TimerTitle.SetActive(false); // Hide timer title when time runs out
+
+                if (TookTooLongMessage != null)
+                {
+                    TookTooLongMessage.SetActive(true); // Show took too long message
+                }
             }
         }
-
-        // Debug logs can be helpful during development
-        Debug.Log($"Order Panel Active: {(orderPanel != null ? orderPanel.activeSelf : false)}");
-        Debug.Log($"Time Remaining: {timer_remaining}");
-        Debug.Log($"Is Moving: {isMoving}");
-        Debug.Log($"Order Sequence Started: {orderSequenceStarted}");
     }
 
     void HideButtonShowOrder()
