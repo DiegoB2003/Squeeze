@@ -89,6 +89,12 @@ public class ShopManager : MonoBehaviour
     // Initializing order variable.
     private TextMeshProUGUI order;
 
+    public TMP_InputField firstIngredientInput; //Input field for the first and second ingredient
+    public TMP_InputField secondIngredientInput;
+    public TMP_Dropdown ingredientDropDown1; //Dropdown for the first and second ingredient
+    public TMP_Dropdown ingredientDropDown2;
+    public Button craftButton; //Crafts the two ingredients into a new item
+
     void Awake()
     {
         Debug.Log("SHOP MANAGER AWAKE");
@@ -191,8 +197,8 @@ public class ShopManager : MonoBehaviour
         if(errorPopup!= null){ //sets error popup to initially be hidden
             errorPopup.gameObject.SetActive(false);
         }
-
     }
+
     string changeCustomerImage () {
         //Array that holds all the customer images paths
         string[] customerImages = {
@@ -556,121 +562,141 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-{
-    if (scene.name == "GameScene")
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
-        dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
-        dayText.text = "Day: " + day;
-
-        if (moneyText == null)
+        if (scene.name == "GameScene")
         {
-            Debug.LogError("MoneyText UI element not found in the scene.");
-        }
+            moneyText = GameObject.Find("Money Text")?.GetComponent<TextMeshProUGUI>();
+            dayText = GameObject.Find("Day Text")?.GetComponent<TextMeshProUGUI>();
+            dayText.text = "Day: " + day;
 
-        AssignUI(); // Reconnect buttons
-
-        errorPopup.SetActive(false);
-
-        if (inventory.Count == 0) // If inventory is empty, initialize it
-        {
-            InitializeInventory();
-        }
-
-        startingStarRating(); // Set star rating
-
-        // Re-find the raspberry object in the current scene
-        raspberryItemObject = null;
-        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
-        foreach (GameObject obj in allObjects)
-        {
-            if (obj.name == "raspberryObject")
+            if (moneyText == null)
             {
-                raspberryItemObject = obj;
-                break;
+                Debug.LogError("MoneyText UI element not found in the scene.");
             }
-        }
-        if (raspberryItemObject == null)
-        {
-            Debug.LogError("Raspberry Item Object not found on scene load.");
-        }
 
+            AssignUI(); // Reconnect buttons
 
-         // Re-find the raspberry object in the current scene
-        strawberryItemObject = null;
-        foreach (GameObject obj in allObjects)
-        {
-            if (obj.name == "strawberryObject")
+            errorPopup.SetActive(false);
+
+            if (inventory.Count == 0) // If inventory is empty, initialize it
             {
-                strawberryItemObject = obj;
-                break;
+                InitializeInventory();
             }
-        }
-        if (strawberryItemObject == null)
-        {
-            Debug.LogError("strawberry Item Object not found on scene load.");
-        }
 
-         // Re-find the raspberry object in the current scene
-        CraftRaspberryLemonadeButton = null;
-        foreach (GameObject obj in allObjects)
-        {
-            if (obj.name == "raspberryLemonade")
+            startingStarRating(); // Set star rating
+
+            // Re-find the raspberry object in the current scene
+            raspberryItemObject = null;
+            GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+            foreach (GameObject obj in allObjects)
             {
-                CraftRaspberryLemonadeButton = obj;
-                break;
+                if (obj.name == "raspberryObject")
+                {
+                    raspberryItemObject = obj;
+                    break;
+                }
             }
-        }
-        if (CraftRaspberryLemonadeButton == null)
-        {
-            Debug.LogError("crafting raspberry leomonade Item Object not found on scene load.");
-        }
+            if (raspberryItemObject == null)
+            {
+                Debug.LogError("Raspberry Item Object not found on scene load.");
+            }
 
-        // Show or hide based on day
-        if (day >= 3)
-        {
-            if (raspberryItemObject != null)
-                raspberryItemObject.SetActive(true);
-                CraftRaspberryLemonadeButton.SetActive(true);
-            if (raspberryText != null)
-                raspberryText.gameObject.SetActive(true);
-                CraftRaspberryLemonadeButton.SetActive(true);//unhides raspberry lemonade crafting
-                raspberryLemonadeText.gameObject.SetActive(true); //unhide raspberry lemonade text
 
-        }
-        else
-        {
-            if (raspberryItemObject != null)
-                raspberryItemObject.SetActive(false);
-                CraftRaspberryLemonadeButton.SetActive(false);
-            if (raspberryText != null)
-                raspberryText.gameObject.SetActive(false);
-                CraftRaspberryLemonadeButton.SetActive(false);//hides rasberry lemoneade crafting
-                raspberryLemonadeText.gameObject.SetActive(false); //hide raspberry lemonade text
+            // Re-find the raspberry object in the current scene
+            strawberryItemObject = null;
+            foreach (GameObject obj in allObjects)
+            {
+                if (obj.name == "strawberryObject")
+                {
+                    strawberryItemObject = obj;
+                    break;
+                }
+            }
+            if (strawberryItemObject == null)
+            {
+                Debug.LogError("strawberry Item Object not found on scene load.");
+            }
 
-        }
+            // Re-find the raspberry object in the current scene
+            CraftRaspberryLemonadeButton = null;
+            foreach (GameObject obj in allObjects)
+            {
+                if (obj.name == "raspberryLemonade")
+                {
+                    CraftRaspberryLemonadeButton = obj;
+                    break;
+                }
+            }
+            if (CraftRaspberryLemonadeButton == null)
+            {
+                Debug.LogError("crafting raspberry leomonade Item Object not found on scene load.");
+            }
 
-        // Show strawberrys on day 4
-        if (day >= 4)
-        {
-            if (strawberryItemObject != null)
-                strawberryItemObject.SetActive(true);
-            if (strawberryText != null)
-                strawberryText.gameObject.SetActive(true);
-        }
-        else
-        {
-            if (strawberryItemObject != null)
-                strawberryItemObject.SetActive(false);
-            if (strawberryText != null)
-                strawberryText.gameObject.SetActive(false);
-        }
+            // Show or hide based on day
+            if (day >= 3)
+            {
+                if (raspberryItemObject != null)
+                    raspberryItemObject.SetActive(true);
+                    CraftRaspberryLemonadeButton.SetActive(true);
+                if (raspberryText != null)
+                    raspberryText.gameObject.SetActive(true);
+                    CraftRaspberryLemonadeButton.SetActive(true);//unhides raspberry lemonade crafting
+                    raspberryLemonadeText.gameObject.SetActive(true); //unhide raspberry lemonade text
 
-        UpdateUI(); // Refresh the displayed money amount
-        UpdateInventoryText(); // Refresh inventory display        
+                ingredientDropDown1 = GameObject.Find("ingredientDropDown1")?.GetComponent<TMP_Dropdown>();
+                ingredientDropDown2 = GameObject.Find("ingredientDropDown2")?.GetComponent<TMP_Dropdown>();
+                //Add the raspberry option to the dropdowns
+                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Raspberry"));
+                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Raspberry"));
+                //Refresh the dropdowns so the UI updates
+                ingredientDropDown1.RefreshShownValue();
+                ingredientDropDown2.RefreshShownValue();
+
+
+            }
+            else
+            {
+                if (raspberryItemObject != null)
+                    raspberryItemObject.SetActive(false);
+                    CraftRaspberryLemonadeButton.SetActive(false);
+                if (raspberryText != null)
+                    raspberryText.gameObject.SetActive(false);
+                    CraftRaspberryLemonadeButton.SetActive(false);//hides rasberry lemoneade crafting
+                    raspberryLemonadeText.gameObject.SetActive(false); //hide raspberry lemonade text
+
+            }
+
+            // Show strawberrys on day 4
+            if (day >= 4)
+            {
+                if (strawberryItemObject != null)
+                    strawberryItemObject.SetActive(true);
+                if (strawberryText != null)
+                    strawberryText.gameObject.SetActive(true);
+                
+
+                ingredientDropDown1 = GameObject.Find("ingredientDropDown1")?.GetComponent<TMP_Dropdown>();
+                ingredientDropDown2 = GameObject.Find("ingredientDropDown2")?.GetComponent<TMP_Dropdown>();
+                //Add the strawberry option to the dropdowns
+                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Strawberry"));
+                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Strawberry"));
+                //Refresh the dropdowns so the UI updates
+                ingredientDropDown1.RefreshShownValue();
+                ingredientDropDown2.RefreshShownValue();
+            }
+            else
+            {
+                if (strawberryItemObject != null)
+                    strawberryItemObject.SetActive(false);
+                if (strawberryText != null)
+                    strawberryText.gameObject.SetActive(false);
+            }
+
+            UpdateUI(); // Refresh the displayed money amount
+            UpdateInventoryText(); // Refresh inventory display        
+        }
     }
-}
 
 
     void AssignUI()
@@ -685,7 +711,7 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         raspberryText = GameObject.Find("raspberryText")?.GetComponent<TextMeshProUGUI>();
         strawberryText = GameObject.Find("strawberryText")?.GetComponent<TextMeshProUGUI>();
         raspberryLemonadeText = GameObject.Find("raspberryLemonadeText")?.GetComponent<TextMeshProUGUI>();
-
+    
         errorPopup = GameObject.Find("ErrorPopup")?.gameObject;
         errorText  = GameObject.Find("ErrorText")?.GetComponent<TextMeshProUGUI>();
         errorOkButton= GameObject.Find("OkButton")?.GetComponent<Button>();
@@ -725,6 +751,7 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         AssignRaspberryLemonadeCraftButton("CraftRaspberryLemonadeButton");
         AssignLemonadeCraftButton("CraftLemonadeButton");
         AssignSellButton("ServeButton");
+        AssignCraftButton("craftButton");
     }
 
     void AssignBuyButton(string buttonName, string itemName)
@@ -735,6 +762,17 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
             button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
             button.onClick.AddListener(() => PurchaseItem(itemName)); //Reassign listener
+        }
+    }
+
+    void AssignCraftButton(string buttonName)
+    {
+        Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
+
+        if (button != null)
+        {
+            button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
+            button.onClick.AddListener(() => CustomCraft()); //Reassign listener
         }
     }
 
@@ -819,4 +857,70 @@ void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         errorText.text = message;
         errorPopup.SetActive(true);
     }
+
+    void CustomCraft()
+    {   
+        firstIngredientInput = GameObject.Find("firstIngredientInput")?.GetComponent<TMP_InputField>(); //Connect all fields
+        secondIngredientInput = GameObject.Find("secondIngredientInput")?.GetComponent<TMP_InputField>();
+        ingredientDropDown1 = GameObject.Find("ingredientDropDown1")?.GetComponent<TMP_Dropdown>();
+        ingredientDropDown2 = GameObject.Find("ingredientDropDown2")?.GetComponent<TMP_Dropdown>();
+        string ingredient1 = ingredientDropDown1.options[ingredientDropDown1.value].text;
+        string ingredient2 = ingredientDropDown2.options[ingredientDropDown2.value].text;
+
+        int amount1;
+        int amount2;
+
+        //Return if ingredients are the same
+        if (ingredient1 == ingredient2)
+        {
+            ShowError("Cannot use the same ingredient twice.");
+            return;
+        }
+
+        if (!int.TryParse(firstIngredientInput.text, out amount1) || amount1 < 0) //Check if the input is a valid number and greater than 0
+        {
+            ShowError("Invalid amount for Ingredient 1.");
+            return;
+        }
+
+        if (!int.TryParse(secondIngredientInput.text, out amount2) || amount2 < 0) //Check if the input is a valid number and greater than 0
+        {
+            ShowError("Invalid amount for Ingredient 2.");
+            return;
+        }
+
+        if (inventory[ingredient1] < amount1 || inventory[ingredient2] < amount2) //Check if the player has enough ingredients
+        {
+            ShowError($"You do not have enough {ingredient1} or {ingredient2}.");
+            return;
+        }
+
+        //Create a dictionary to store the selected ingredients and their amounts
+        Dictionary<string, int> selectedIngredients = new Dictionary<string, int>
+        {
+            { ingredient1, amount1 },
+            { ingredient2, amount2 }
+        };
+
+        //Check if the selected ingredients match a valid recipe
+        if (selectedIngredients.ContainsKey("Lemon") && selectedIngredients["Lemon"] == 2 &&
+            selectedIngredients.ContainsKey("Sugar") && selectedIngredients["Sugar"] == 1)
+        {
+            CraftLemonade();
+        } else if (selectedIngredients.ContainsKey("Raspberry") && selectedIngredients["Raspberry"] == 2 &&
+            selectedIngredients.ContainsKey("Sugar") && selectedIngredients["Sugar"] == 2)
+        {
+            CraftRaspberryLemonade();
+        }
+        else
+        { //Invalid recipe, remove ingredients from inventory
+            ShowError("Invalid crafting recipe. Ingredients were wasted.");
+            inventory[ingredient1] -= amount1;
+            inventory[ingredient2] -= amount2;
+        }
+
+        UpdateInventoryText(); //Refresh inventory UI
+        Debug.Log($"Crafted using {amount1} {ingredient1} and {amount2} {ingredient2}!");
+    }
+
 }
