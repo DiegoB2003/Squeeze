@@ -52,7 +52,7 @@ public class ShopManager : MonoBehaviour
          { "Lemon", 2 },
          { "Sugar", 1 },
          { "Tea", 4 },
-         { "Grape", 3 },
+         { "Grapes", 3 },
          { "Raspberry", 10},
          { "Strawberry",5}
     };
@@ -94,6 +94,7 @@ public class ShopManager : MonoBehaviour
     public TMP_Dropdown ingredientDropDown1; //Dropdown for the first and second ingredient
     public TMP_Dropdown ingredientDropDown2;
     public Button craftButton; //Crafts the two ingredients into a new item
+    public TMP_Dropdown selectWhatToSell; //Dropdown menu that allows the player to select what to sell
 
     void Awake()
     {
@@ -342,7 +343,7 @@ public class ShopManager : MonoBehaviour
         inventory["Lemon"] = 0;
         inventory["Sugar"] = 0;
         inventory["Tea"] = 0;
-        inventory["Grape"] = 0;
+        inventory["Grapes"] = 0;
         inventory["Lemonade"] = 0;
         inventory["Raspberry"] = 0;
         inventory["Strawberry"] = 0;
@@ -356,7 +357,7 @@ public class ShopManager : MonoBehaviour
         DateTime endTime = DateTime.Now;
         TimeSpan timeTaken = endTime - startTime;
 
-        Debug.Log("Time taken to serve the customer: " + timeTaken);
+        // Debug.Log("Time taken to serve the customer: " + timeTaken);
         
         // Determine if the customer was served quickly
         bool servedQuickly = timeTaken.Seconds < timer;
@@ -434,6 +435,9 @@ public class ShopManager : MonoBehaviour
                 inventory[itemName] = 1;
             }
 
+            // Update the dropdown menu to include the purchased item
+            UpdateDropdownMenu(itemName, 1); // Add item to the dropdown menu
+
             Debug.Log("Purchased " + itemName + " for $" + cost + ". Total " + itemName + " in inventory: " + inventory[itemName]);
 
             // Update inventory text after purchase
@@ -452,18 +456,41 @@ public class ShopManager : MonoBehaviour
     public void SellItem(){
         order = GameObject.Find("CustomerOrder")?.GetComponent<TextMeshProUGUI>();
         string orderItem = string.Concat(order.text.Where(c => !char.IsWhiteSpace(c)));
+
+        //now get what is selected in the d.d.m.
+        int selectedIndex = selectWhatToSell.value;  // Get the index of the currently selected option
+        string selectedOption = selectWhatToSell.options[selectedIndex].text;  // Get the text of the selected option
+
         if (orderItem == "Grapes") 
-            orderItem = "Grape";
+            orderItem = "Grapes";
         if (orderItem == "Strawberries") 
             orderItem = "Strawberry";
         if (orderItem == "Raspberries") 
             orderItem = "Raspberry";
-        if (inventory[orderItem] >= 1) {
+        if(orderItem == "Lemonade")
+            orderItem = "Lemonade";
+        if(orderItem == "Tea")
+            orderItem = "Tea";
+        if(orderItem == "RaspberryLemonade")
+            orderItem = "RaspberryLemonade";
+
+        if (selectedOption != orderItem){
+            Debug.Log($"Please choose the correct item to sell!");
+            ShowError($"Please choose the correct item to sell!");
+        }
+        
+        else if (orderItem == selectedOption ) {
             inventory[orderItem] -= 1;
             int salePrice = 10;
             totalMoney += salePrice;
             UpdateUI();
             UpdateInventoryText();
+
+            //remove the item from the dropdown menu if needed (none left)
+            if (inventory[orderItem] == 0)
+            {
+                UpdateDropdownMenu(orderItem, 2); // Remove item from the dropdown menu
+            }
 
             // Record the sale
             RecordSale(orderItem, salePrice);
@@ -483,11 +510,10 @@ public class ShopManager : MonoBehaviour
 
             // Move the customer off the screen after served
             MoveCustomerOffScreen();
-        } else {
-            Debug.Log($"Not enough {orderItem} in inventory to sell!");
-            ShowError($"Not enough {orderItem} in inventory to sell!");
+        } 
+        
 
-        }
+        
     }
 
     public void CraftRaspberryLemonade(){
@@ -496,6 +522,21 @@ public class ShopManager : MonoBehaviour
             inventory["Sugar"] -= 2;
             inventory["RaspberryLemonade"] += 1;
             UpdateInventoryText();
+
+            //now we remove the Raspberry and sugar from menu if we have 0 of each
+            if (inventory["Raspberry"] == 0)
+            {
+                UpdateDropdownMenu("Raspberry", 2); // Remove item from the dropdown menu
+            }
+
+            if (inventory["Sugar"] == 0)
+            {
+                UpdateDropdownMenu("Sugar", 2); // Remove item from the dropdown menu
+
+            }
+
+            // Update the dropdown menu to include the
+            UpdateDropdownMenu("Raspberry Lemonade", 1);
         }
         else{
             Debug.Log("Not enough ingredients to craft raspberry Lemonade!");
@@ -509,6 +550,21 @@ public class ShopManager : MonoBehaviour
             inventory["Sugar"] -= 1;
             inventory["Lemonade"] += 1;
             UpdateInventoryText();
+
+            //now we remove the lemons and sugar from menu if we have 0 of each
+            if (inventory["Lemon"] == 0)
+            {
+                UpdateDropdownMenu("Lemon", 2); // Remove item from the dropdown menu
+            }
+
+            if (inventory["Sugar"] == 0)
+            {
+                UpdateDropdownMenu("Sugar", 2); // Remove item from the dropdown menu
+
+            }
+
+            // Update the dropdown menu to include the
+            UpdateDropdownMenu("Lemonade", 1); 
         }
         else{
             Debug.Log("Not enough ingredients to craft Lemonade!");
@@ -550,7 +606,7 @@ public class ShopManager : MonoBehaviour
 
         if (grapeText != null)
         {
-            grapeText.text = "[" + inventory["Grape"] + "]";
+            grapeText.text = "[" + inventory["Grapes"] + "]";
         }
 
         if (raspberryText != null)
@@ -566,6 +622,49 @@ public class ShopManager : MonoBehaviour
           if (raspberryLemonadeText != null)
         {
             raspberryLemonadeText.text = "Rasberry Lemonade: " + inventory["RaspberryLemonade"];
+        }
+    }
+
+    //function below edits drop down menu 
+    void UpdateDropdownMenu(string itemName, int actionType)
+    {
+        if (selectWhatToSell == null)
+        {
+            Debug.LogError("SelectWhatToSell dropdown not found!");
+            return;
+        }
+
+        if (actionType == 1) // Add item to the dropdown menu
+        {
+            // Check if the item is already in the dropdown
+            if (selectWhatToSell.options.Any(option => option.text == itemName))
+            {
+                Debug.Log($"Item '{itemName}' is already in the dropdown menu.");
+                return;
+            }
+
+            // Add the item to the dropdown
+            selectWhatToSell.options.Add(new TMP_Dropdown.OptionData(itemName));
+            selectWhatToSell.RefreshShownValue(); // Refresh the dropdown to show the new option
+            Debug.Log($"Added '{itemName}' to the dropdown menu.");
+        }
+        else if (actionType == 2) // Remove item from the dropdown menu
+        {
+            // Check if the item exists in the dropdown
+            if (!selectWhatToSell.options.Any(option => option.text == itemName))
+            {
+                Debug.Log($"Item '{itemName}' is not in the dropdown menu.");
+                return;
+            }
+
+            // Remove the item from the dropdown
+            selectWhatToSell.options.RemoveAll(option => option.text == itemName);
+            selectWhatToSell.RefreshShownValue(); // Refresh the dropdown to reflect the changes
+            Debug.Log($"Removed '{itemName}' from the dropdown menu.");
+        }
+        else
+        {
+            Debug.LogError("Invalid action type. Use 1 to add or 2 to delete.");
         }
     }
 
@@ -734,6 +833,22 @@ public class ShopManager : MonoBehaviour
         // Timer bar assignment
         timerBar = GameObject.Find("LinearTimerHolder");
 
+        // Order Panel assignment
+        selectWhatToSell = GameObject.Find("currentInventory")?.GetComponent<TMP_Dropdown>();
+
+        //remove options two and three from the dropdown
+        if (selectWhatToSell != null)
+        {
+            selectWhatToSell.options.RemoveAt(2);
+            selectWhatToSell.options.RemoveAt(1);
+            selectWhatToSell.RefreshShownValue();
+        }
+        else
+        {
+            Debug.LogError("SelectWhatToSell dropdown not found!");
+        }
+
+
         // PopUps
         moneyPopUp = GameObject.Find("MoneyPopUp");
         starPopUp = GameObject.Find("StarPopUp");
@@ -752,7 +867,7 @@ public class ShopManager : MonoBehaviour
         AssignBuyButton("BuyLemonButton", "Lemon");
         AssignBuyButton("BuySugarButton", "Sugar");
         AssignBuyButton("BuyTeaButton", "Tea");
-        AssignBuyButton("BuyGrapesButton", "Grape");
+        AssignBuyButton("BuyGrapesButton", "Grapes");
         AssignBuyButton("BuyRaspberryButton", "Raspberry");
         AssignBuyButton("BuyStrawberryButton", "Strawberry");
         AssignRaspberryLemonadeCraftButton("CraftRaspberryLemonadeButton");
@@ -788,10 +903,11 @@ public class ShopManager : MonoBehaviour
     {
         Button button = GameObject.Find(buttonName)?.GetComponent<Button>();
 
+        // Debug.Log("Selected option: " + selectedOption);
         if (button != null)
         {
             button.onClick.RemoveAllListeners(); //Prevent duplicate listeners
-            button.onClick.AddListener(() => SellItem()); //Reassign listener
+            button.onClick.AddListener(() => SellItem()); //Reassign listener and pass item
         }
     }
 
@@ -868,6 +984,7 @@ public class ShopManager : MonoBehaviour
         errorText.text = message;
         errorPopup.SetActive(true);
     }
+
 
     void CustomCraft()
     {   

@@ -117,7 +117,7 @@ public class SimpleMovement : MonoBehaviour
                 if (timer_linear_image != null)
                 {
                     float fillAmount = timer_remaining / max_time;
-                    Debug.Log($"Fill Amount: {fillAmount}");
+                    // Debug.Log($"Fill Amount: {fillAmount}");
                     timer_linear_image.fillAmount = fillAmount;
 
                     // Change the timer bar image based on the remaining time
