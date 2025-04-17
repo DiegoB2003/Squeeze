@@ -41,7 +41,7 @@ public class ShopManager : MonoBehaviour
     public TextMeshProUGUI moneyText; //Text box that displays total money
     public TextMeshProUGUI dayText;
 
-    public int timer = 8;
+    public int timer = 10;
 
     //Dictionary to store item names to the amount the player has in their inventory
     public Dictionary<string, int> inventory = new Dictionary<string, int>();
@@ -320,7 +320,7 @@ public class ShopManager : MonoBehaviour
         }
 
         // Check if day ended when enough customers were served
-        if(dailySalesRecords[day].Count >= 3+day){
+        if(dailySalesRecords[day].Count >= getCustomerAmount()){
             EndDay();
         }
 
@@ -842,6 +842,10 @@ public class ShopManager : MonoBehaviour
         }
     }
 
+    private int getCustomerAmount(){
+        return Mathf.CeilToInt(3+(day*(rating/100f)));
+    }
+    
     private void EndDay(){
         EODBalance.Add(totalMoney);
         day++;//increments the day

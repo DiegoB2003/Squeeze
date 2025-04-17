@@ -9402,7 +9402,7 @@ MonoBehaviour:
   CraftRaspberryLemonadeButton: {fileID: 0}
   moneyText: {fileID: 1514262147}
   dayText: {fileID: 0}
-  timer: 8
+  timer: 10
   DaysTransactionsBalance: 
   EODBalance: 
   lemonText: {fileID: 1761261014}
