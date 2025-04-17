@@ -973,6 +973,7 @@ public class ShopManager : MonoBehaviour
     //Function called when button clicked to reset DaysTransactionsBalance array and adds current money to the list
     public void ResetDaysTransactions()
     {
+        
         DaysTransactionsBalance.Clear(); // Clear the list
         DaysTransactionsBalance.Add(totalMoney); // Add the current money to the list
         Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));

@@ -3422,7 +3422,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -87.214966, y: 0}
+  m_AnchoredPosition: {x: -87.21484, y: 0}
   m_SizeDelta: {x: 174.43, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &381609652
@@ -3995,7 +3995,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Option A
+  m_text: Select Item
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -8272,7 +8272,7 @@ GameObject:
   - component: {fileID: 1067835402}
   - component: {fileID: 1067835401}
   m_Layer: 5
-  m_Name: Dropdown
+  m_Name: currentInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8351,7 +8351,7 @@ MonoBehaviour:
   m_MultiSelect: 0
   m_Options:
     m_Options:
-    - m_Text: Option A
+    - m_Text: Select Item
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
     - m_Text: Option B
@@ -9423,6 +9423,7 @@ MonoBehaviour:
   ingredientDropDown1: {fileID: 0}
   ingredientDropDown2: {fileID: 0}
   craftButton: {fileID: 0}
+  selectWhatToSell: {fileID: 1067835401}
 --- !u!4 &1149733316
 Transform:
   m_ObjectHideFlags: 0
@@ -9714,7 +9715,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 109.400024, y: -41.600006}
+  m_AnchoredPosition: {x: 109.40039, y: -41.600098}
   m_SizeDelta: {x: 225, y: 90}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1195855667
@@ -11894,7 +11895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 167.6, y: -9.599976}
+  m_AnchoredPosition: {x: 167.6, y: -9.600098}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1436554534
@@ -13314,7 +13315,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -87.214966, y: 0}
+  m_AnchoredPosition: {x: -87.21484, y: 0}
   m_SizeDelta: {x: 174.43, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1592220271
@@ -13942,7 +13943,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -370}
+  m_AnchoredPosition: {x: 0, y: -370.0003}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1654045426
