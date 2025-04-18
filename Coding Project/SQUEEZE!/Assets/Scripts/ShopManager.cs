@@ -56,6 +56,19 @@ public class ShopManager : MonoBehaviour
          { "Raspberry", 10},
          { "Strawberry",5}
     };
+
+    //Dictionary mapping item names to their sales
+    public Dictionary<string, int> itemSales = new Dictionary<string, int>()
+    {
+         { "Lemon", 7 },
+         { "Sugar", 6 },
+         { "Tea", 5 },
+         { "Grapes", 4 },
+         { "Raspberry", 3},
+         { "Strawberry",2},
+         {"Lemonade",1},
+         {"RaspberryLemonade",8}
+    };
     
     //Dictionary stores sales records for each day
     public Dictionary<int, List<SaleRecords>> dailySalesRecords = new Dictionary<int, List<SaleRecords>>();
@@ -481,7 +494,7 @@ public class ShopManager : MonoBehaviour
         
         else if (orderItem == selectedOption ) {
             inventory[orderItem] -= 1;
-            int salePrice = 10;
+            int salePrice = itemSales[orderItem];
             totalMoney += salePrice;
             UpdateUI();
             UpdateInventoryText();
@@ -985,7 +998,6 @@ public class ShopManager : MonoBehaviour
         errorText.text = message;
         errorPopup.SetActive(true);
     }
-
 
     void CustomCraft()
     {   
