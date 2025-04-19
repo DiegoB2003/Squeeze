@@ -10,7 +10,7 @@ using System.Collections;
 using System.ComponentModel.Design;
 
 
-[System.Serializable]
+[Serializable]
 public class SaleRecords {
     public int day;
     public string item;
@@ -32,6 +32,8 @@ public class ShopManager : MonoBehaviour
 
     public int totalMoney = 50; //The player starts with $50 on the game
     public int day = 1;
+    public int raspberryUnlockDay = 2;
+    public int strawberryUnlockDay = 3;
     
     public int rating = 60;     //numerical representation of the rating
     public DateTime startTime = DateTime.Now;       //Start tacing track of the time
@@ -53,21 +55,19 @@ public class ShopManager : MonoBehaviour
          { "Sugar", 1 },
          { "Tea", 4 },
          { "Grapes", 3 },
-         { "Raspberry", 10},
-         { "Strawberry",5}
+         { "Raspberries", 4},
+         { "Strawberries",5}
     };
 
     //Dictionary mapping item names to their sales
     public Dictionary<string, int> itemSales = new Dictionary<string, int>()
     {
-         { "Lemon", 7 },
-         { "Sugar", 6 },
          { "Tea", 5 },
          { "Grapes", 4 },
-         { "Raspberry", 3},
-         { "Strawberry",2},
-         {"Lemonade",1},
-         {"RaspberryLemonade",8}
+         { "Raspberries", 5},
+         { "Strawberries",6},
+         {"Lemonade",7},
+         {"Raspberry Lemonade",11}
     };
     
     //Dictionary stores sales records for each day
@@ -100,7 +100,7 @@ public class ShopManager : MonoBehaviour
     private GameObject starPopUp;
     
     // Initializing order variable.
-    private TextMeshProUGUI order;
+    private string orderItem;
 
     public TMP_InputField firstIngredientInput; //Input field for the first and second ingredient
     public TMP_InputField secondIngredientInput;
@@ -358,9 +358,9 @@ public class ShopManager : MonoBehaviour
         inventory["Tea"] = 0;
         inventory["Grapes"] = 0;
         inventory["Lemonade"] = 0;
-        inventory["Raspberry"] = 0;
-        inventory["Strawberry"] = 0;
-        inventory["RaspberryLemonade"] = 0;
+        inventory["Raspberries"] = 0;
+        inventory["Strawberries"] = 0;
+        inventory["Raspberry Lemonade"] = 0;
 
     }
 
@@ -467,28 +467,14 @@ public class ShopManager : MonoBehaviour
 
     // Sells item. Removes item from inventory and gives money to player.
     public void SellItem(){
-        order = GameObject.Find("CustomerOrder")?.GetComponent<TextMeshProUGUI>();
-        string orderItem = string.Concat(order.text.Where(c => !char.IsWhiteSpace(c)));
+        orderItem = GameObject.Find("CustomerOrder")?.GetComponent<TextMeshProUGUI>().text;
 
         //now get what is selected in the d.d.m.
         int selectedIndex = selectWhatToSell.value;  // Get the index of the currently selected option
         string selectedOption = selectWhatToSell.options[selectedIndex].text;  // Get the text of the selected option
-
-        if (orderItem == "Grapes") 
-            orderItem = "Grapes";
-        if (orderItem == "Strawberries") 
-            orderItem = "Strawberry";
-        if (orderItem == "Raspberries") 
-            orderItem = "Raspberry";
-        if(orderItem == "Lemonade")
-            orderItem = "Lemonade";
-        if(orderItem == "Tea")
-            orderItem = "Tea";
-        if(orderItem == "RaspberryLemonade")
-            orderItem = "RaspberryLemonade";
-
+        
         if (selectedOption != orderItem){
-            Debug.Log($"Please choose the correct item to sell!");
+            Debug.Log($"Please choose the correct item to sell! Tried to sell {selectedOption}, customer wanted {orderItem}");
             ShowError($"Please choose the correct item to sell!");
         }
         
@@ -530,16 +516,16 @@ public class ShopManager : MonoBehaviour
     }
 
     public void CraftRaspberryLemonade(){
-        if (inventory["Raspberry"] >= 2 && inventory["Sugar"] >= 2){
-            inventory["Raspberry"] -= 2;
+        if (inventory["Raspberries"] >= 2 && inventory["Sugar"] >= 2){
+            inventory["Raspberries"] -= 2;
             inventory["Sugar"] -= 2;
-            inventory["RaspberryLemonade"] += 1;
+            inventory["Raspberry Lemonade"] += 1;
             UpdateInventoryText();
 
             //now we remove the Raspberry and sugar from menu if we have 0 of each
-            if (inventory["Raspberry"] == 0)
+            if (inventory["Raspberries"] == 0)
             {
-                UpdateDropdownMenu("Raspberry", 2); // Remove item from the dropdown menu
+                UpdateDropdownMenu("Raspberries", 2); // Remove item from the dropdown menu
             }
 
             if (inventory["Sugar"] == 0)
@@ -624,17 +610,17 @@ public class ShopManager : MonoBehaviour
 
         if (raspberryText != null)
         {
-            raspberryText.text = "[" + inventory["Raspberry"] + "]";
+            raspberryText.text = "[" + inventory["Raspberries"] + "]";
         }
 
         if (strawberryText != null)
         {
-            strawberryText.text = "[" + inventory["Strawberry"] + "]";
+            strawberryText.text = "[" + inventory["Strawberries"] + "]";
         }
 
           if (raspberryLemonadeText != null)
         {
-            raspberryLemonadeText.text = "Rasberry Lemonade: " + inventory["RaspberryLemonade"];
+            raspberryLemonadeText.text = "Rasberry Lemonade: " + inventory["Raspberry Lemonade"];
         }
     }
 
@@ -653,6 +639,8 @@ public class ShopManager : MonoBehaviour
             if (selectWhatToSell.options.Any(option => option.text == itemName))
             {
                 Debug.Log($"Item '{itemName}' is already in the dropdown menu.");
+                return;
+            } else if (itemName == "Lemon" || itemName == "Sugar") {
                 return;
             }
 
@@ -752,8 +740,8 @@ public class ShopManager : MonoBehaviour
                 Debug.LogError("crafting raspberry leomonade Item Object not found on scene load.");
             }
 
-            // Show or hide based on day
-            if (day >= 3)
+            // Show raspberries on unlockable day
+            if (day >= raspberryUnlockDay)
             {
                 if (raspberryItemObject != null)
                     raspberryItemObject.SetActive(true);
@@ -766,8 +754,8 @@ public class ShopManager : MonoBehaviour
                 ingredientDropDown1 = GameObject.Find("ingredientDropDown1")?.GetComponent<TMP_Dropdown>();
                 ingredientDropDown2 = GameObject.Find("ingredientDropDown2")?.GetComponent<TMP_Dropdown>();
                 //Add the raspberry option to the dropdowns
-                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Raspberry"));
-                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Raspberry"));
+                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Raspberries"));
+                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Raspberries"));
                 //Refresh the dropdowns so the UI updates
                 ingredientDropDown1.RefreshShownValue();
                 ingredientDropDown2.RefreshShownValue();
@@ -786,8 +774,8 @@ public class ShopManager : MonoBehaviour
 
             }
 
-            // Show strawberrys on day 4
-            if (day >= 4)
+            // Show strawberrys on unlockable day
+            if (day >= strawberryUnlockDay)
             {
                 if (strawberryItemObject != null)
                     strawberryItemObject.SetActive(true);
@@ -798,8 +786,8 @@ public class ShopManager : MonoBehaviour
                 ingredientDropDown1 = GameObject.Find("ingredientDropDown1")?.GetComponent<TMP_Dropdown>();
                 ingredientDropDown2 = GameObject.Find("ingredientDropDown2")?.GetComponent<TMP_Dropdown>();
                 //Add the strawberry option to the dropdowns
-                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Strawberry"));
-                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Strawberry"));
+                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Strawberries"));
+                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Strawberries"));
                 //Refresh the dropdowns so the UI updates
                 ingredientDropDown1.RefreshShownValue();
                 ingredientDropDown2.RefreshShownValue();
@@ -881,8 +869,8 @@ public class ShopManager : MonoBehaviour
         AssignBuyButton("BuySugarButton", "Sugar");
         AssignBuyButton("BuyTeaButton", "Tea");
         AssignBuyButton("BuyGrapesButton", "Grapes");
-        AssignBuyButton("BuyRaspberryButton", "Raspberry");
-        AssignBuyButton("BuyStrawberryButton", "Strawberry");
+        AssignBuyButton("BuyRaspberryButton", "Raspberries");
+        AssignBuyButton("BuyStrawberryButton", "Strawberries");
         AssignRaspberryLemonadeCraftButton("CraftRaspberryLemonadeButton");
         AssignLemonadeCraftButton("CraftLemonadeButton");
         AssignSellButton("ServeButton");
@@ -1048,7 +1036,7 @@ public class ShopManager : MonoBehaviour
             selectedIngredients.ContainsKey("Sugar") && selectedIngredients["Sugar"] == 1)
         {
             CraftLemonade();
-        } else if (selectedIngredients.ContainsKey("Raspberry") && selectedIngredients["Raspberry"] == 2 &&
+        } else if (selectedIngredients.ContainsKey("Raspberries") && selectedIngredients["Raspberries"] == 2 &&
             selectedIngredients.ContainsKey("Sugar") && selectedIngredients["Sugar"] == 2)
         {
             CraftRaspberryLemonade();

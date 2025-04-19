@@ -17,14 +17,16 @@ public class CreateOrder : MonoBehaviour
     void Start()
     {   
         // To get day variable
-        int day = (int)(GameObject.Find("GameManager")?.GetComponent<ShopManager>().day);
+        int day = ShopManager.Instance.day;
+        int raspberryUnlockDay = ShopManager.Instance.raspberryUnlockDay;
+        int strawberryUnlockDay = ShopManager.Instance.strawberryUnlockDay;
         // Call the RandomizeText method
-        if (day >= 3) {
+        if (day >= raspberryUnlockDay) {
             Debug.Log("Adding Raspberries and Raspberry Lemonade to order pool.");
             items.Add("Raspberries");
             items.Add("Raspberry Lemonade");
         }
-        if (day >= 4) {
+        if (day >= strawberryUnlockDay) {
             Debug.Log("Adding Raspberries and Raspberry Lemonade to order pool.");
             items.Add("Strawberries");
         }

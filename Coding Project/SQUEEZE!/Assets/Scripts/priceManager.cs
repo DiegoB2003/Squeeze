@@ -4,37 +4,30 @@ using System.Collections.Generic;
 
 public class PriceManager : MonoBehaviour
 {
-    public TMP_InputField lemonInput;
-    public TMP_InputField sugarInput;
     public TMP_InputField teaInput;
     public TMP_InputField grapesInput;
     public TMP_InputField lemonadeInput;
     public TMP_InputField raspberryInput;
     public TMP_InputField strawberryInput;
     public TMP_InputField raspberryLemonadeInput;
-    
-    // public GameObject raspberryObject;
-    // public GameObject raspberryLemonadeObject;
-    // public GameObject strawberryObject;
-    // public GameObject strawberryLemonadeObject;
 
     private Dictionary<string, TMP_InputField> inputFields;
 
     void Start()
     {
         var sales = ShopManager.Instance.itemSales;
-        // var day = ShopManager.Instance.day;
+        int day = ShopManager.Instance.day;
+        int raspberryUnlockDay = ShopManager.Instance.raspberryUnlockDay;
+        int strawberryUnlockDay = ShopManager.Instance.strawberryUnlockDay;
 
         inputFields = new Dictionary<string, TMP_InputField>()
         {
-            { "Lemon", lemonInput },
-            { "Sugar", sugarInput },
             { "Tea", teaInput },
             { "Grapes", grapesInput },
-            { "Raspberry", raspberryInput },
-            { "Strawberry", strawberryInput },
+            { "Raspberries", raspberryInput },
+            { "Strawberries", strawberryInput },
             { "Lemonade", lemonadeInput },
-            { "RaspberryLemonade", raspberryLemonadeInput }
+            { "Raspberry Lemonade", raspberryLemonadeInput }
         };
 
         foreach (var item in inputFields)
@@ -46,25 +39,25 @@ public class PriceManager : MonoBehaviour
             item.Value.onEndEdit.AddListener((input) => OnPriceChanged(item.Key, input));//listens for changes and updates it
         }
 
-        // if (day > 3)
-        // {
-        //     raspberryObject.SetActive(true);
-        //     raspberryLemonadeObject.SetActive(true);
-        // }
-        // else
-        // {
-        //     raspberryObject.SetActive(false);
-        //     raspberryLemonadeObject.SetActive(false);
-        // }
+        if (day >= raspberryUnlockDay)
+        {
+            GetParentOfInput(raspberryInput).SetActive(true);
+            GetParentOfInput(raspberryLemonadeInput).SetActive(true);
+        }
+        else
+        {
+            GetParentOfInput(raspberryInput).SetActive(false);
+            GetParentOfInput(raspberryLemonadeInput).SetActive(false);
+        }
 
-        // if(day > 4){
-        //      strawberryObject.SetActive(true);
-        //      strawberryLemonadeObject.SetActive(true);
-        // }
-        // else{
-        //     strawberryObject.SetActive(false);
-        //     strawberryLemonadeObject.SetActive(false);
-        // }
+        if(day >= strawberryUnlockDay){
+            GetParentOfInput(strawberryInput).SetActive(true);
+            // GetParentOfInput(strawberryLemonadeInput).SetActive(true);
+        }
+        else{
+            GetParentOfInput(strawberryInput).SetActive(false);
+            // GetParentOfInput(strawberryLemonadeInput).SetActive(false);
+        }
     }
 
     void OnPriceChanged(string itemName, string input)
@@ -78,5 +71,12 @@ public class PriceManager : MonoBehaviour
         {
             Debug.LogWarning($"Invalid input for {itemName}: '{input}'");
         }
+    }
+
+    public GameObject GetParentOfInput(TMP_InputField input)
+    {
+        if (input == null) return null;
+
+        return input.gameObject.transform.parent != null ? input.gameObject.transform.parent.gameObject : null;
     }
 }
