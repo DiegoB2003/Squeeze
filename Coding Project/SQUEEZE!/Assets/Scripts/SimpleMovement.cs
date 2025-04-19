@@ -144,6 +144,7 @@ public class SimpleMovement : MonoBehaviour
                 if (TookTooLongMessage != null)
                 {
                     TookTooLongMessage.SetActive(true); // Show took too long message
+                    ShopManager.Instance.servedLate = true; //Set the servedLate boolean to true since taken to long
                 }
             }
         }

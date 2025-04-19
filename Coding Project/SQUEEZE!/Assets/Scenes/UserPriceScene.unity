@@ -794,8 +794,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 30
+  m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1359,6 +1359,7 @@ GameObject:
   m_Component:
   - component: {fileID: 365454981}
   - component: {fileID: 365454980}
+  - component: {fileID: 365454982}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -1399,6 +1400,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &365454982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365454979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83421124f9dcb474e864df7c45b1edc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feedbackText: {fileID: 179599012}
 --- !u!1 &388735623
 GameObject:
   m_ObjectHideFlags: 0
@@ -1799,6 +1813,7 @@ GameObject:
   - component: {fileID: 532435389}
   - component: {fileID: 532435388}
   - component: {fileID: 532435387}
+  - component: {fileID: 532435391}
   m_Layer: 5
   m_Name: priceUI
   m_TagString: Untagged
@@ -1845,7 +1860,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &532435389
 Canvas:
   m_ObjectHideFlags: 0
@@ -1855,8 +1870,8 @@ Canvas:
   m_GameObject: {fileID: 532435386}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 2
+  m_Camera: {fileID: 1744507721}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -1877,8 +1892,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 532435386}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 90}
+  m_LocalScale: {x: 0.019193858, y: 0.019193858, z: 0.019193858}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 790024843}
@@ -1899,8 +1914,20 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_SizeDelta: {x: 925.5, y: 521}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &532435391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532435386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 438fba3f2da9fd742b6291e27ddf1674, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &544035296
 GameObject:
   m_ObjectHideFlags: 0
@@ -5602,6 +5629,18 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: GameScene
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 532435391}
+        m_TargetAssemblyTypeName: ResetDailyTransactionScript, Assembly-CSharp
+        m_MethodName: ResetAllBooleans
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1787088707

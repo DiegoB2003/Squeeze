@@ -630,7 +630,7 @@ MonoBehaviour:
     - m_Text: Sugar
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Grape
+    - m_Text: Grapes
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
@@ -4642,7 +4642,7 @@ MonoBehaviour:
     - m_Text: Sugar
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
-    - m_Text: Grape
+    - m_Text: Grapes
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
@@ -9308,6 +9308,8 @@ MonoBehaviour:
   errorOkButton: {fileID: 0}
   totalMoney: 50
   day: 1
+  raspberryUnlockDay: 2
+  strawberryUnlockDay: 3
   rating: 60
   raspberryItemObject: {fileID: 1466421993}
   strawberryItemObject: {fileID: 0}
@@ -9336,6 +9338,11 @@ MonoBehaviour:
   ingredientDropDown2: {fileID: 0}
   craftButton: {fileID: 0}
   selectWhatToSell: {fileID: 1067835401}
+  servedLate: 0
+  soldWrongItem: 0
+  wastedItemsCrafting: 0
+  priceTooHigh: 0
+  priceTooLow: 0
 --- !u!4 &1149733316
 Transform:
   m_ObjectHideFlags: 0

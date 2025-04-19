@@ -109,6 +109,13 @@ public class ShopManager : MonoBehaviour
     public Button craftButton; //Crafts the two ingredients into a new item
     public TMP_Dropdown selectWhatToSell; //Dropdown menu that allows the player to select what to sell
 
+    //Different booleans for each mistake a player can make
+    public bool servedLate = false; //Done
+    public bool soldWrongItem = false;
+    public bool wastedItemsCrafting = false; //Done
+    public bool priceTooHigh = false;
+    public bool priceTooLow = false;
+
     void Awake()
     {
         Debug.Log("SHOP MANAGER AWAKE");
@@ -539,7 +546,7 @@ public class ShopManager : MonoBehaviour
         }
         else{
             Debug.Log("Not enough ingredients to craft raspberry Lemonade!");
-            ShowError("Not enough ingredients to craft raspberry Lemonade!\n(Need 2 Lemons & 2 Sugar)");
+            ShowError("Not enough ingredients to craft raspberry Lemonade!\n(Need 2 Raspberries & 2 Sugar)");
         }
     }
 
@@ -754,8 +761,8 @@ public class ShopManager : MonoBehaviour
                 ingredientDropDown1 = GameObject.Find("ingredientDropDown1")?.GetComponent<TMP_Dropdown>();
                 ingredientDropDown2 = GameObject.Find("ingredientDropDown2")?.GetComponent<TMP_Dropdown>();
                 //Add the raspberry option to the dropdowns
-                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Raspberries"));
-                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Raspberries"));
+                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Raspberry"));
+                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Raspberry"));
                 //Refresh the dropdowns so the UI updates
                 ingredientDropDown1.RefreshShownValue();
                 ingredientDropDown2.RefreshShownValue();
@@ -786,8 +793,8 @@ public class ShopManager : MonoBehaviour
                 ingredientDropDown1 = GameObject.Find("ingredientDropDown1")?.GetComponent<TMP_Dropdown>();
                 ingredientDropDown2 = GameObject.Find("ingredientDropDown2")?.GetComponent<TMP_Dropdown>();
                 //Add the strawberry option to the dropdowns
-                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Strawberries"));
-                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Strawberries"));
+                ingredientDropDown1.options.Add(new TMP_Dropdown.OptionData("Strawberry"));
+                ingredientDropDown2.options.Add(new TMP_Dropdown.OptionData("Strawberry"));
                 //Refresh the dropdowns so the UI updates
                 ingredientDropDown1.RefreshShownValue();
                 ingredientDropDown2.RefreshShownValue();
@@ -1046,6 +1053,8 @@ public class ShopManager : MonoBehaviour
             ShowError("Invalid crafting recipe. Ingredients were wasted.");
             inventory[ingredient1] -= amount1;
             inventory[ingredient2] -= amount2;
+
+            wastedItemsCrafting = true; //Set the flag to true
         }
 
         UpdateInventoryText(); //Refresh inventory UI

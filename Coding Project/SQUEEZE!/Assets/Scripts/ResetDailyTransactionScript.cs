@@ -9,4 +9,15 @@ public class ResetDailyTransactionScript : MonoBehaviour
         ShopManager.Instance.DaysTransactionsBalance.Add(ShopManager.Instance.totalMoney);
         Debug.Log("Daily transactions have been reset and current money added.");
     }
+
+    //Function to reset all booleans to false at the start of day from shop manager
+    public void ResetAllBooleans()
+    {
+        ShopManager.Instance.servedLate = false;
+        ShopManager.Instance.soldWrongItem = false;
+        ShopManager.Instance.wastedItemsCrafting = false;
+        ShopManager.Instance.priceTooHigh = false;
+        ShopManager.Instance.priceTooLow = false;
+        Debug.Log("All boolean values have been reset to false.");
+    }
 }
