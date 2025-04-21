@@ -632,15 +632,25 @@ public class ShopManager : MonoBehaviour
     }
 
     //function below edits drop down menu 
-    void UpdateDropdownMenu(string itemName, int actionType)
-    {
-        if (selectWhatToSell == null)
+    void UpdateDropdownMenu(string itemName = null, int actionType = 3)
+    {   
+        //if action type is 3, we simply want to refresh the dropdown menu to show the current inventory
+        if (actionType == 3)
         {
-            Debug.LogError("SelectWhatToSell dropdown not found!");
-            return;
+            //loop through the inventory and add each item to the dropdown
+            foreach (KeyValuePair<string, int> item in inventory)
+            {
+                if (item.Value > 0) // Only add items that are in the inventory
+                {
+                    selectWhatToSell.options.Add(new TMP_Dropdown.OptionData(item.Key));
+                    Debug.Log("Updating dropdown menu " + item.Key);
+
+                }
+            }
         }
 
-        if (actionType == 1) // Add item to the dropdown menu
+
+        else if (actionType == 1) // Add item to the dropdown menu
         {
             // Check if the item is already in the dropdown
             if (selectWhatToSell.options.Any(option => option.text == itemName))
@@ -808,7 +818,10 @@ public class ShopManager : MonoBehaviour
             }
 
             UpdateUI(); // Refresh the displayed money amount
-            UpdateInventoryText(); // Refresh inventory display        
+            UpdateInventoryText(); // Refresh inventory display 
+            UpdateDropdownMenu(null,3); // Add items to the dropdown menu
+
+                   
         }
     }
 
