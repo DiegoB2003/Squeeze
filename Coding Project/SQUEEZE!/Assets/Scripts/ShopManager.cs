@@ -451,6 +451,8 @@ public class ShopManager : MonoBehaviour
             totalMoney -= cost;
             UpdateUI();
 
+
+
             //Add the purchased item to player inventory
             if (inventory.ContainsKey(itemName))
             {
