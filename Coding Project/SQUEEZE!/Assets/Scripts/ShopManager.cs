@@ -371,23 +371,29 @@ public class ShopManager : MonoBehaviour
 
     }
 
-    void starRating()
+    void starRating(string soldWrongItem = null)
     {
         // Calculate the time taken to serve the customer
         DateTime endTime = DateTime.Now;
         TimeSpan timeTaken = endTime - startTime;
+        bool servedQuickly = false; // Default value
 
-        // Debug.Log("Time taken to serve the customer: " + timeTaken);
-        
-        // Determine if the customer was served quickly
-        bool servedQuickly = timeTaken.Seconds < timer;
-        Debug.Log(servedQuickly 
-            ? $"You served the customer in less than {timer} seconds!" 
-            : $"You took more than {timer} seconds to serve the customer.");
+        if (soldWrongItem == null)
+        {
+            // Determine if the customer was served quickly
+            servedQuickly = timeTaken.Seconds < timer;
+            Debug.Log(servedQuickly 
+                ? $"You served the customer in less than {timer} seconds!" 
+                : $"You took more than {timer} seconds to serve the customer.");
+        }
+        else if (soldWrongItem == "true")
+        {
+            servedQuickly = false;
+            Debug.Log("You sold the wrong item!");
+        }
 
         // Update rating within bounds (0 to 100)
-        int delta = servedQuickly ? 10 : -10;   // Increase rating if served quickly, decrease if not
-
+        int delta = servedQuickly ? 10 : -10; // Increase rating if served quickly, decrease if not
         // Play star popup.
         if(starPopUp != null){
             starPopUp.GetComponent<TextMeshProUGUI>().text = delta>=0 ? $"+{(float)delta/20}<sprite name=\"starPic_0\">" : $"{(float)delta/20}<sprite name=\"starPic_0\">";
@@ -479,10 +485,46 @@ public class ShopManager : MonoBehaviour
         //now get what is selected in the d.d.m.
         int selectedIndex = selectWhatToSell.value;  // Get the index of the currently selected option
         string selectedOption = selectWhatToSell.options[selectedIndex].text;  // Get the text of the selected option
-        
-        if (selectedOption != orderItem){
-            Debug.Log($"Please choose the correct item to sell! Tried to sell {selectedOption}, customer wanted {orderItem}");
-            ShowError($"Please choose the correct item to sell!");
+        if (selectedOption == "Select Item")
+        {
+            Debug.Log("Please select an item to sell!");
+            ShowError("Please select an item to sell!");
+            return;
+        }
+        else if (selectedOption != orderItem){
+            // Debug.Log($"Please choose the correct item to sell! Tried to sell {selectedOption}, customer wanted {orderItem}");
+            // ShowError($"Please choose the correct item to sell!");
+            inventory[orderItem] -= 1;
+            int salePrice = itemSales[orderItem];
+            UpdateUI();
+            UpdateInventoryText();
+
+            //remove the item from the dropdown menu if needed (none left)
+            if (inventory[orderItem] == 0)
+            {
+                UpdateDropdownMenu(orderItem, 2); // Remove item from the dropdown menu
+            }
+
+            // Record the sale
+            RecordSale(orderItem, 0);
+            totalMoney += 0;
+            DaysTransactionsBalance.Add(totalMoney); //Add the total money to the list
+            Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));
+            
+            starRating("true");
+
+            // Play money popup.
+            if(moneyPopUp != null){
+                moneyPopUp.GetComponent<TextMeshProUGUI>().text = $"+${0}";
+                moneyPopUp.SetActive(true);
+            } else {
+                Debug.LogError("Money Popup null!");
+            }
+
+            // Move the customer off the screen after served
+            MoveCustomerOffScreen();
+
+
         }
         
         else if (orderItem == selectedOption ) {
@@ -518,7 +560,6 @@ public class ShopManager : MonoBehaviour
             MoveCustomerOffScreen();
         } 
         
-
         
     }
 
@@ -648,7 +689,6 @@ public class ShopManager : MonoBehaviour
                 }
             }
         }
-
 
         else if (actionType == 1) // Add item to the dropdown menu
         {
