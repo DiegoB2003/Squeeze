@@ -11,32 +11,32 @@ public class FeedbackScript : MonoBehaviour
 
     public void ShowFeedback() //Method to show feedback based on the ShopManager's state
     {
-        string feedback = "Try to improve the following:\n";
+        string feedback = "Try to improve the following for a higher rating and more profit:\n";
         bool hasFeedback = false;
 
         if (ShopManager.Instance.servedLate)
         {
-            feedback += "- You served a customer late.\n";
+            feedback += "- Try serving customers in time.\n";
             hasFeedback = true;
         }
         if (ShopManager.Instance.soldWrongItem)
         {
-            feedback += "- You sold a wrong item.\n";
+            feedback += "- Don't serve the wrong product.\n";
             hasFeedback = true;
         }
         if (ShopManager.Instance.wastedItemsCrafting)
         {
-            feedback += "- You wasted items while crafting.\n";
+            feedback += "- Craft with the right ingredients to avoid waste.\n";
             hasFeedback = true;
         }
         if (ShopManager.Instance.priceTooHigh)
         {
-            feedback += "- Atleast one price was too high.\n";
+            feedback += "- Consider lowering high prices.\n";
             hasFeedback = true;
         }
         if (ShopManager.Instance.priceTooLow)
         {
-            feedback += "- Atleast one price was too low.\n";
+            feedback += "- Consider increasing some of the lower prices from default.\n";
             hasFeedback = true;
         }
 

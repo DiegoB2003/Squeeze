@@ -59,15 +59,26 @@ public class ShopManager : MonoBehaviour
          { "Strawberries",5}
     };
 
-    //Dictionary mapping item names to their sales
+    //Dictionary mapping item names to their sales amounts when they are also changed in the game
     public Dictionary<string, int> itemSales = new Dictionary<string, int>()
     {
          { "Tea", 5 },
          { "Grapes", 4 },
          { "Raspberries", 5},
          { "Strawberries",6},
-         {"Lemonade",7},
-         {"Raspberry Lemonade",11}
+         { "Lemonade",7},
+         { "Raspberry Lemonade",11}
+    };
+
+    //Default Dictionary mapping item names to their sales that never changed
+    public Dictionary<string, int> defaultItemSales = new Dictionary<string, int>()
+    {
+         { "Tea", 5 },
+         { "Grapes", 4 },
+         { "Raspberries", 5},
+         { "Strawberries",6},
+         { "Lemonade",7},
+         { "Raspberry Lemonade",11}
     };
     
     //Dictionary stores sales records for each day
@@ -492,8 +503,8 @@ public class ShopManager : MonoBehaviour
             Debug.Log("Please select an item to sell!");
             ShowError("Please select an item to sell!");
             return;
-        }
-        else if (selectedOption != orderItem){
+        } else if (selectedOption != orderItem){
+            soldWrongItem = true;
             // Debug.Log($"Please choose the correct item to sell! Tried to sell {selectedOption}, customer wanted {orderItem}");
             // ShowError($"Please choose the correct item to sell!");
             inventory[orderItem] -= 1;
@@ -527,35 +538,55 @@ public class ShopManager : MonoBehaviour
             MoveCustomerOffScreen();
 
 
-        }
-        
-        else if (orderItem == selectedOption ) {
-            inventory[orderItem] -= 1;
-            int salePrice = itemSales[orderItem];
-            totalMoney += salePrice;
-            UpdateUI();
-            UpdateInventoryText();
+        } else if (orderItem == selectedOption ) {
+            //Check if customer will purchase item using price of default and current price
+            if (willCustomerPurchase(itemSales[orderItem], defaultItemSales[orderItem])) {
+                //if itemSales price is equal or lower than defaultItemSales price set priceTooLow to true
+                if (itemSales[orderItem] <= defaultItemSales[orderItem])
+                {
+                    priceTooLow = true; //Price was too low so set true for hint
+                }
 
-            //remove the item from the dropdown menu if needed (none left)
-            if (inventory[orderItem] == 0)
-            {
-                UpdateDropdownMenu(orderItem, 2); // Remove item from the dropdown menu
-            }
+                inventory[orderItem] -= 1;
+                int salePrice = itemSales[orderItem];
+                totalMoney += salePrice;
+                UpdateUI();
+                UpdateInventoryText();
 
-            // Record the sale
-            RecordSale(orderItem, salePrice);
-            DaysTransactionsBalance.Add(totalMoney); //Add the total money to the list
-            Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));
-            
-            //check if we need to remove a start or add a star 
-            starRating();
+                //remove the item from the dropdown menu if needed (none left)
+                if (inventory[orderItem] == 0)
+                {
+                    UpdateDropdownMenu(orderItem, 2); // Remove item from the dropdown menu
+                }
 
-            // Play money popup.
-            if(moneyPopUp != null){
-                moneyPopUp.GetComponent<TextMeshProUGUI>().text = $"+${salePrice}";
-                moneyPopUp.SetActive(true);
+                // Record the sale
+                RecordSale(orderItem, salePrice);
+                DaysTransactionsBalance.Add(totalMoney); //Add the total money to the list
+                Debug.Log("Total money for the day: " + string.Join(", ", DaysTransactionsBalance));
+                
+                //check if we need to remove a start or add a star 
+                starRating();
+
+                // Play money popup.
+                if(moneyPopUp != null){
+                    moneyPopUp.GetComponent<TextMeshProUGUI>().text = $"+${salePrice}";
+                    moneyPopUp.SetActive(true);
+                } else {
+                    Debug.LogError("Money Popup null!");
+                }
             } else {
-                Debug.LogError("Money Popup null!");
+                RecordSale(orderItem, 0);
+
+                // Play money popup.
+                if(moneyPopUp != null){
+                    moneyPopUp.GetComponent<TextMeshProUGUI>().text = $"+${0}";
+                    moneyPopUp.SetActive(true);
+                } else {
+                    Debug.LogError("Money Popup null!");
+                }
+                priceTooHigh = true; //Price was too high so set true for hint
+                ShowError("This price is way too high for me!");
+                //Remove 0.5 stars (JOSE PLEASE DO THIS IDK HOW TOOOOOO)
             }
 
             // Move the customer off the screen after served
@@ -1030,7 +1061,7 @@ public class ShopManager : MonoBehaviour
         day++;//increments the day
         dayText.text = "Day: " + day; // Update the day text in the UI
         Debug.Log("It's now day " + day); 
-       SceneManager.LoadScene("EndDayGraphScene");
+        SceneManager.LoadScene("EndDayGraphScene");
     }
 
     //Function called when button clicked to reset DaysTransactionsBalance array and adds current money to the list
@@ -1116,4 +1147,12 @@ public class ShopManager : MonoBehaviour
         Debug.Log($"Crafted using {amount1} {ingredient1} and {amount2} {ingredient2}!");
     }
 
+    //Function does math to check if the customer will purchase the product based on price
+    bool willCustomerPurchase(float currentPrice, float basePrice)
+    {
+        float resistance = 0.6f; //resistance to price changes, higher means less likely to buy
+        float priceFactor = currentPrice / basePrice;
+        float buyChance = Mathf.Clamp01(1f / Mathf.Pow(priceFactor, resistance));
+        return UnityEngine.Random.value <= buyChance;
+    }
 }
