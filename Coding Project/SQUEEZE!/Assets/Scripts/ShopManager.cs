@@ -716,8 +716,13 @@ public class ShopManager : MonoBehaviour
             {
                 if (item.Value > 0) // Only add items that are in the inventory
                 {
-                    selectWhatToSell.options.Add(new TMP_Dropdown.OptionData(item.Key));
-                    Debug.Log("Updating dropdown menu " + item.Key);
+
+                    //remoe sugar and lemon from the dropdown menu
+                    if (item.Key != "Sugar" || item.Key != "Lemon")
+                    {
+                        selectWhatToSell.options.Add(new TMP_Dropdown.OptionData(item.Key));
+                        Debug.Log("Updating dropdown menu " + item.Key);
+                    }
 
                 }
             }
@@ -734,10 +739,19 @@ public class ShopManager : MonoBehaviour
                 return;
             }
 
+            //if item == Raspberry Lemonade resize the dropdown to fit the text
+            // if (itemName == "Raspberry Lemonade")
+            // {
+            //     selectWhatToSell.GetComponent<RectTransform>().sizeDelta = new Vector2(200, 30);
+
+            // }
+
+
             // Add the item to the dropdown
             selectWhatToSell.options.Add(new TMP_Dropdown.OptionData(itemName));
             selectWhatToSell.RefreshShownValue(); // Refresh the dropdown to show the new option
             Debug.Log($"Added '{itemName}' to the dropdown menu.");
+        
         }
         else if (actionType == 2) // Remove item from the dropdown menu
         {
