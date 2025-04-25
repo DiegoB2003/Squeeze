@@ -30,7 +30,7 @@ public class ShopManager : MonoBehaviour
     public Button errorOkButton;    
     public static ShopManager Instance; //Instance of shop manager for other files to access
 
-    public int totalMoney = 50; //The player starts with $50 on the game
+    public int totalMoney = 30; //The player starts with $50 on the game
     public int day = 1;
     public int raspberryUnlockDay = 2;
     public int strawberryUnlockDay = 3;
@@ -507,15 +507,14 @@ public class ShopManager : MonoBehaviour
             soldWrongItem = true;
             // Debug.Log($"Please choose the correct item to sell! Tried to sell {selectedOption}, customer wanted {orderItem}");
             // ShowError($"Please choose the correct item to sell!");
-            inventory[orderItem] -= 1;
-            int salePrice = itemSales[orderItem];
+            inventory[selectedOption] -= 1;
             UpdateUI();
             UpdateInventoryText();
 
             //remove the item from the dropdown menu if needed (none left)
-            if (inventory[orderItem] == 0)
+            if (inventory[selectedOption] == 0)
             {
-                UpdateDropdownMenu(orderItem, 2); // Remove item from the dropdown menu
+                UpdateDropdownMenu(selectedOption, 2); // Remove item from the dropdown menu
             }
 
             // Record the sale

@@ -9306,7 +9306,7 @@ MonoBehaviour:
   errorPopup: {fileID: 0}
   errorText: {fileID: 0}
   errorOkButton: {fileID: 0}
-  totalMoney: 50
+  totalMoney: 30
   day: 1
   raspberryUnlockDay: 2
   strawberryUnlockDay: 3
