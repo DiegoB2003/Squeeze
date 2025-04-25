@@ -587,6 +587,9 @@ public class ShopManager : MonoBehaviour
                 priceTooHigh = true; //Price was too high so set true for hint
                 ShowError("This price is way too high for me!");
                 //Remove 0.5 stars (JOSE PLEASE DO THIS IDK HOW TOOOOOO)
+
+                starRating("true");
+
             }
 
             // Move the customer off the screen after served
