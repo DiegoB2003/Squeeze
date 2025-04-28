@@ -24,11 +24,27 @@ public class SimpleMovement : MonoBehaviour
     private bool isMoving = false;
     private bool orderSequenceStarted = false;
 
+    public GameObject targetObject;
+    private Rigidbody2D targetRb;
+    private Animator targetAnimator;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.gravityScale = 0;
         rb.freezeRotation = true;
+
+        if (targetObject != null)
+        {
+            targetRb = targetObject.GetComponent<Rigidbody2D>();
+            targetAnimator = targetObject.GetComponent<Animator>();
+
+            if (targetRb != null)
+            {
+                targetRb.gravityScale = 0;
+                targetRb.freezeRotation = true;
+            }
+        }
 
         startPosition = transform.position; // Store initial position
 
@@ -37,7 +53,6 @@ public class SimpleMovement : MonoBehaviour
             TakeOrder.gameObject.SetActive(false); // Hide button at the start
             if (orderPanel != null) orderPanel.SetActive(false); // Hide order panel at start
             if (timerBar != null) timerBar.SetActive(false); // Hide timer bar at start
-
             if (TimerTitle != null) TimerTitle.SetActive(false); // Hide timer title at start
             
   
@@ -73,6 +88,7 @@ public class SimpleMovement : MonoBehaviour
         // Hide take order button and timer bar when starting movement
         if (TakeOrder != null) TakeOrder.gameObject.SetActive(false);
         if (timerBar != null) timerBar.SetActive(false);
+        if (targetAnimator != null) targetAnimator.SetBool("isMoving", true);
     }
 
     void FixedUpdate()
@@ -85,6 +101,7 @@ public class SimpleMovement : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero; // Stop moving
             isMoving = false;
+            if (targetAnimator != null) targetAnimator.SetBool("isMoving", false);
 
             // Start the order sequence only once when the character stops
             if (!orderSequenceStarted)

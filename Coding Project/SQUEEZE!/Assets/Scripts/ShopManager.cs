@@ -256,8 +256,8 @@ public class ShopManager : MonoBehaviour
     void MoveCustomerOffScreen()
     {
         // Find the customer object
-        GameObject customer = GameObject.Find("DuckCustomer");
-
+        GameObject customer = GameObject.Find("Customer");
+        GameObject dCustomer = GameObject.Find("DuckCustomer");
         //Hide the Order Panel and randomize order again.
         GameObject orderPanel = GameObject.Find("OrderPanel");
         GameObject orderUI = GameObject.Find("OrderUI");
@@ -289,7 +289,7 @@ public class ShopManager : MonoBehaviour
         if (customer != null)
         {
             // Start the coroutine to move the customer off the screen
-            StartCoroutine(MoveCustomerCoroutine(customer));
+            StartCoroutine(MoveCustomerCoroutine(customer, dCustomer));
         }
         else
         {
@@ -297,10 +297,16 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    IEnumerator MoveCustomerCoroutine(GameObject customer)
+    IEnumerator MoveCustomerCoroutine(GameObject customer, GameObject dCustomer)
     {
         float speed = 5f; // Adjust the speed as needed
         Vector3 offScreenPosition = new Vector3(10, customer.transform.position.y, customer.transform.position.z);
+
+        Animator animator = dCustomer.GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", true); //Start walking animation
+        }
 
         // Move the customer off the screen
         while (Vector3.Distance(customer.transform.position, offScreenPosition) > 0.1f)
@@ -316,6 +322,11 @@ public class ShopManager : MonoBehaviour
         // Ensure the customer is exactly at the off-screen position
         customer.transform.position = offScreenPosition;
 
+        if (animator != null)
+        {
+            animator.SetBool("isMoving", false); //Stop walking animation
+        }
+
         // Wait for a short duration before resetting the position
         yield return new WaitForSeconds(1f);
 
@@ -327,7 +338,7 @@ public class ShopManager : MonoBehaviour
 
         // Load the new sprite
         Sprite newSprite = Resources.Load<Sprite>(newImagePath); // Load the new sprite from Resources
-        SpriteRenderer spriteRenderer = customer.GetComponent<SpriteRenderer>();    
+        SpriteRenderer spriteRenderer = dCustomer.GetComponent<SpriteRenderer>();    
         if (spriteRenderer != null && newSprite != null)
         {
             spriteRenderer.sprite = newSprite; // Change the sprite
