@@ -5,7 +5,7 @@ This game was developed for an Undergraduate project at the University of Illino
 
 Team Members: Jose Bolanos, Nick Filipov, **Diego Bravo**, Alejandro Bravo
 
-# How To Play + Controls
+# How To Play
 - 
 
 ### My contributions:
