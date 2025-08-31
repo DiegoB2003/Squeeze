@@ -1,10 +1,12 @@
-Repository for CS 442 Group 2
+# SQUEEZE!
+This game was developed for an Undergraduate project at the University of Illinois at Chicago in a CS 442 course.
 
-Note:  The presentation evaluation form and rubric are provided here for reference
-       and planning purposes.  Hard copies will be handed out in class on 
-       presentation days.  ( Unless presentations are given online, in which case
-       a Google form will be made available. )
-       
-       Similarly the Group Project Member Evaluation Rubric is provided here for 
-       reference only.  A form will be provided periodically during the term 
-       for completion by all group members.
+[Design Document](https://docs.google.com/document/d/1CFu6U85XrUEFJIyIWUjvCOGbUwl8SkGE5plIKW824DA/edit?usp=sharing)
+
+Team Members: Jose Bolanos, Nick Filipov, **Diego Bravo**, Alejandro Bravo
+
+# How To Play + Controls
+- 
+
+### My contributions:
+- 
