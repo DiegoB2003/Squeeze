@@ -17,4 +17,11 @@ You may set prices of products after each day, but this will affect how customer
 - The customer will pay for the product and leave a review that depends on how you fulfilled the order. Maintain a high rating to get more customers each day.
 
 ### My contributions:
-- 
+- Implemented selling event logic.
+- Implemented rating system logic.
+- Implemented customer order logic and randomization.
+- Implemented end-of-day sequence and logic.
+- Added text pop-up animations when selling products using Mecanim.
+- Designed and added "New Item" screen.
+- Set constraints and improved readability in UI panels.
+- Helped design the lemonade stand scene.
