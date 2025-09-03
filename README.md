@@ -15,7 +15,7 @@ You may set prices of products after each day, but this will affect how customer
 - Serve the customer by selecting the correct product in their order panel dropdown menu and then clicking the green check mark button.
 - The customer will pay for the product and leave a review that depends on how you fulfilled the order. Maintain a high rating to get more customers each day.
 
-### My contributions:
+## My contributions:
 - Implemented selling event logic.
 - Implemented rating system logic.
 - Implemented customer order logic and randomization.
