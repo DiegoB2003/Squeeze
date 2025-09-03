@@ -4,7 +4,7 @@
 
 Team Members: Jose Bolanos, Nick Filipov, **Diego Bravo**, Alejandro Bravo
 
-# How To Play
+## How To Play
 You'll need to fulfill customer orders by stocking up on ingredients and crafting lemonade.
 You may set prices of products after each day, but this will affect how customers respond to sales.
 - Take Orders from customers who approach the lemonade stand by clicking "Take Order" over their head.
