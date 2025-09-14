@@ -4,6 +4,8 @@
 
 Team Members: Jose Bolanos, Nick Filipov, **Diego Bravo**, Alejandro Bravo
 
+Download [here](https://github.com/DiegoB2003/Squeeze/releases/tag/v1.0.0)
+
 ## How To Play
 You'll need to fulfill customer orders by stocking up on ingredients and crafting lemonade.
 You may set prices of products after each day, but this will affect how customers respond to sales.
